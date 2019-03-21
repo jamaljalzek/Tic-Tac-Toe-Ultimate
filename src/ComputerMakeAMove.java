@@ -35,7 +35,7 @@ public class ComputerMakeAMove
 		} while ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
 				  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
 		
-		// Claim that GameTile.
+		// Claim that GameTile:
 		claimAndCheck(thisGame);
 		
 	} // End of method easyMode.
@@ -77,8 +77,9 @@ public class ComputerMakeAMove
 	 */
 	public static void hardMode (Game thisGame)
 	{
-		// Claim that GameTile.
-		claimAndCheck(thisGame);
+		
+		// Use mediumMode for now, until hardMode is implemented:
+		mediumMode(thisGame);
 		
 	} // End of method hardMode.
 	
@@ -137,7 +138,12 @@ public class ComputerMakeAMove
 		}
 		
 		// We have now searched all of the rows on the game board.
-		//System.out.println("best row index: " + bestRowLocation);
+		// bestRowLocation will be equal to -1 if all rows have at least 1 spot that is claimed by the player.
+		// In this case, we set bestRowCount to -1 so rows will not be considered in selectBestPath:
+		if (bestRowLocation == -1)
+		{
+			bestRowCount = -1;
+		}
 		
 	} // End of method searchRows.
 	
@@ -188,7 +194,12 @@ public class ComputerMakeAMove
 		}
 		
 		// We have now searched all of the columns on the game board.
-		//System.out.println("best column index: " + bestColumnLocation);
+		// bestColumnLocation will be equal to -1 if all columns have at least 1 spot that is claimed by the player.
+		// In this case, we set bestColumnCount to -1 so columns will not be considered in selectBestPath:
+		if (bestColumnLocation == -1)
+		{
+			bestColumnCount = -1;
+		}
 		
 	} // End of method searchColumns.
 	
@@ -211,7 +222,6 @@ public class ComputerMakeAMove
 		computerTileCount = 0;
 		for (row = thisGame.dimension - 1, column = 0; row >= 0 && column < thisGame.dimension; --row, ++column)
 		{
-			System.out.println("First diagonal position: " + row + ", " + column);
 			// If we find that the current spot has been claimed by the player, then abandon searching
 			// the rest of this diagonal:
 			if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
@@ -231,15 +241,10 @@ public class ComputerMakeAMove
 			// Else, it's just an empty spot, so move onto the next spot in this diagonal.
 		}
 		
-		// Make sure row and column are correct:
-		++row;
-		--column;
-		System.out.println("First diagonal (4, 0) ending position: " + row + ", " + column);
-		
 		// At this point, we either scanned the entire first diagonal (and found no player tiles in it),
 		// or we found one or more player tiles and abandoned the rest of the search.
 		// Verify that this diagonal is still able to be won by checking that we made it to the end:
-		if ( row == 0 && column == (thisGame.dimension - 1) ) // use computerTileCount != -1 ???????
+		if (computerTileCount != -1)
 		{
 			// Since we fully scanned the first diagonal, which starts at row (dimension - 1) and moves up-right,
 			// record the count:
@@ -251,7 +256,6 @@ public class ComputerMakeAMove
 		computerTileCount = 0;
 		for (row = 0, column = 0; row < thisGame.dimension && column < thisGame.dimension; ++row, ++column)
 		{
-			System.out.println("Second diagonal position: " + row + ", " + column);
 			// If we find that the current spot has been claimed by the player, then abandon searching
 			// the rest of this diagonal:
 			if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
@@ -271,15 +275,10 @@ public class ComputerMakeAMove
 			// Else, it's just an empty spot, so move onto the next spot in this diagonal.
 		}
 		
-		// Make sure row and column are correct:
-		//--row;
-		//--column;
-		System.out.println("Second diagonal (0, 0) ending position: " + row + ", " + column);
-		
 		// At this point, we either scanned the entire second diagonal (and found no player tiles in it),
 		// or we found one or more player tiles and abandoned the rest of the search.
 		// Verify that this diagonal is still able to be won by checking that we made it to the end:
-		if ( row == (thisGame.dimension - 1) && column == (thisGame.dimension - 1) )
+		if (computerTileCount != -1)
 		{
 			// Now that we scanned the second diagonal, which starts at row 0 and moves down-right,
 			// compare the count to the previous diagonal we searched:
@@ -296,7 +295,12 @@ public class ComputerMakeAMove
 		chosenDiagonal = bestDiagonalLocation;
 		
 		// We have now searched both of the diagonals on the game board.
-		//System.out.println("best diagonal index: " + bestDiagonalLocation);
+		// bestDiagonalLocation will be equal to -1 if both diagonals have at least 1 spot that is claimed by the player.
+		// In this case, we set bestDiagonalCount to -1 so both diagonals will not be considered in selectBestPath:
+		if (bestDiagonalLocation == -1)
+		{
+			bestDiagonalCount = -1;
+		}
 		
 	} // End of method searchDiagonals.
 	
@@ -306,6 +310,7 @@ public class ComputerMakeAMove
 		int randomChoice;
 		
 		
+		/////////////////////////////////// DEBUGGING ///////////////////////////////////
 		System.out.println("best row count: " + bestRowCount + '\n' + 
 				   "best row index: " + bestRowLocation);
 		
@@ -314,25 +319,23 @@ public class ComputerMakeAMove
 		
 		System.out.println("best diagonal count: " + bestDiagonalCount + '\n' + 
 				   "best diagonal index: " + bestDiagonalLocation);
-		
+		/////////////////////////////////////////////////////////////////////////////////
 		
 		/// 4. Next, pick the row, column, or diagonal that has the shortest path to victory:
 		
 		// Compare the best row, best column, and best diagonal found:
 		
 		// -1 == -1 == -1
-		if (bestRowLocation == -1 && bestColumnLocation == -1 && bestDiagonalLocation == -1)
+		if (bestRowCount == -1 && bestColumnCount == -1 && bestDiagonalCount == -1)
 		{
 			// Randomly choose any spot on the game board:
 			easyMode(thisGame);
-			System.out.println("-1 -1 -1");
 		}
-		// 1 == 2 == 3
+		// R == C == D
 		else if (bestRowCount == bestColumnCount && bestColumnCount == bestDiagonalCount)
 		{
 			// Randomly choose between the 3:
-			randomIndex = new Random();
-			randomChoice = randomIndex.nextInt(3);
+			randomChoice = new Random().nextInt(3);
 			
 			if (randomChoice == 0) // Choose the row:
 			{
@@ -350,46 +353,44 @@ public class ComputerMakeAMove
 				chooseSpotInDiagonal(thisGame);
 			}
 		}
-		// 1 > 2 >= 3
+		// R > C >= D
 		else if (bestRowCount >= bestColumnCount && bestColumnCount >= bestDiagonalCount)
 		{
 			// Randomly choose a spot in the best row:
 			chooseSpotInRow(thisGame);
 		}
-		// 1 > 3 >= 2
+		// R > D >= C
 		else if (bestRowCount >= bestDiagonalCount && bestDiagonalCount >= bestColumnCount)
 		{
 			// Randomly choose a spot in the best row:
 			chooseSpotInRow(thisGame);
 		}
-		// 2 > 1 >= 3
+		// C > R >= D
 		else if (bestColumnCount >= bestRowCount && bestRowCount >= bestDiagonalCount)
 		{
 			// Randomly choose a spot in the best column:
 			chooseSpotInColumn(thisGame);
 		}
-		// 2 > 3 >= 1
+		// C > D >= R
 		else if (bestColumnCount >= bestDiagonalCount && bestDiagonalCount >= bestRowCount)
 		{
 			// Randomly choose a spot in the best column:
 			chooseSpotInColumn(thisGame);
 		}
-		// 3 > 1 >= 2
+		// D > R >= C
 		else if (bestDiagonalCount >= bestRowCount && bestRowCount >= bestColumnCount)
 		{
 			// Randomly choose a spot in the best diagonal:
 			chooseSpotInDiagonal(thisGame);
 		}
-		// 3 > 2 >= 1
+		// D > C >= R
 		else if (bestDiagonalCount >= bestColumnCount && bestColumnCount >= bestRowCount)
 		{
 			// Randomly choose a spot in the best diagonal:
 			chooseSpotInDiagonal(thisGame);
 		}
 		
-
-		
-		// Claim that GameTile.
+		// Claim that GameTile:
 		claimAndCheck(thisGame);
 		
 	} // End of method selectBestPath.
@@ -398,10 +399,10 @@ public class ComputerMakeAMove
 	private static void chooseSpotInRow (Game thisGame)
 	{
 		// Randomly choose a spot in the best row:
+		randomIndex = new Random();
 		chosenRow = bestRowLocation;
 		do
 		{
-			randomIndex = new Random();
 			chosenColumn = randomIndex.nextInt(thisGame.dimension);
 			
 		// If that GameTile was already claimed by the player or computer, then try again:
@@ -415,9 +416,9 @@ public class ComputerMakeAMove
 	{
 		// Randomly choose a spot in the best column:
 		chosenColumn = bestColumnLocation;
+		randomIndex = new Random();
 		do
 		{
-			randomIndex = new Random();
 			chosenRow = randomIndex.nextInt(thisGame.dimension);
 			
 		// If that GameTile was already claimed by the player or computer, then try again:
@@ -430,6 +431,8 @@ public class ComputerMakeAMove
 	private static void chooseSpotInDiagonal (Game thisGame)
 	{
 		// Randomly choose a spot in the best diagonal.
+		randomIndex = new Random();
+		
 		// Since there are two diagonals, first determine the chosen one (by its starting row):
 		if (chosenDiagonal == 0)
 		{
@@ -439,7 +442,6 @@ public class ComputerMakeAMove
 			{
 				// Since the row index and the column index both start at 0, and increase by 1 each time we move down-right,
 				// they are always equal to each other as we travel the diagonal:
-				randomIndex = new Random();
 				chosenRow = randomIndex.nextInt(thisGame.dimension);
 				chosenColumn = chosenRow;
 				
@@ -458,7 +460,6 @@ public class ComputerMakeAMove
 				// Each time we move up-right, the row index decreases by 1 while the column index increases by 1.
 				// Therefore, the relationship between the row index and the column index is row + column = dimension - 1.
 				// Or, given a row, we can rewrite this relationship as column = dimension - 1 - row.
-				randomIndex = new Random();
 				chosenRow = randomIndex.nextInt(thisGame.dimension);
 				chosenColumn = thisGame.dimension - 1 - chosenRow;
 				

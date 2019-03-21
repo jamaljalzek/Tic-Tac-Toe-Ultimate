@@ -135,8 +135,7 @@ public class Game
 		if (rowTileCount == dimension || columnTileCount == dimension ||
 			bottomLeftdiagonalTileCount == dimension || topLeftdiagonalTileCount == dimension)
 		{
-			System.out.println(selectedTile.getText() + "has won!");
-			new GameEndWindow();
+			new GameEndWindow(selectedTile.getText() + " has won!");
 		}
 		
 	} // End of method checkGameStatus.

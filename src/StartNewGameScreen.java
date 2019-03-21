@@ -1,8 +1,8 @@
-import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,6 +19,8 @@ public class StartNewGameScreen extends JPanel
 	private JTextField enterPlayerSymbol, enterComputerSymbol;
 	private JComboBox <Integer> selectDimensionList;
 	private int selectedDimension;
+	private String selectedDifficulty;
+	private JRadioButton easyMode, mediumMode, hardMode;
 	
 	
 	/**
@@ -35,6 +37,12 @@ public class StartNewGameScreen extends JPanel
 		this.setLayout( new BoxLayout(this, BoxLayout.Y_AXIS) );
 		this.createContents();
 		
+		// Initialize the default values for:
+		enterPlayerSymbol.setText("X"); // The player's symbol.
+		enterComputerSymbol.setText("O"); // The computer's symbol.
+		selectDimensionList.setSelectedIndex(0); // The default dimension to be 3.
+		easyMode.setSelected(true); // The game difficulty.
+		
 	} // End of Constructor.
 	
 	
@@ -42,7 +50,6 @@ public class StartNewGameScreen extends JPanel
 	{
 		JPanel settingsPanel, chooseSymbolsAndDimensionPanel, selectDifficultyPanel, buttonsPanel;
 		Integer [] dimensionsToChoose;
-		JRadioButton easyMode, mediumMode, hardMode;
 		JButton start, quit;
 		
 		
@@ -55,9 +62,8 @@ public class StartNewGameScreen extends JPanel
 		dimensionsToChoose = new Integer [] {3, 4, 5, 6, 7, 8, 9, 10};
 		selectDimensionList = new JComboBox <Integer>(dimensionsToChoose);
 		selectDimensionList.addActionListener( new SelectionListener() );
-		// Set the default dimension to be 3, in case the player immediately hits the "Start!" button:
-		selectDimensionList.setSelectedIndex(0);
 		
+		// Create the two areas that the player can enter in a symbol to represent them self, as well as the computer:
 		enterPlayerSymbol = new JTextField();
 		enterComputerSymbol = new JTextField();
 		
@@ -72,9 +78,12 @@ public class StartNewGameScreen extends JPanel
 		chooseSymbolsAndDimensionPanel.add(selectDimensionList);
 		
 		// Create the difficulty options that can be selected:
-		easyMode = new JRadioButton("Easy");
-		mediumMode = new JRadioButton("Medium");
-		hardMode = new JRadioButton("Hard");
+		easyMode = new JRadioButton("EASY");
+		easyMode.addItemListener( new RadioButtonListener() );
+		mediumMode = new JRadioButton("MEDIUM");
+		mediumMode.addItemListener( new RadioButtonListener() );
+		hardMode = new JRadioButton("HARD");
+		hardMode.addItemListener( new RadioButtonListener() );
 		
 		// Create the selectDifficultyPanel and add its components:
 		selectDifficultyPanel = new JPanel();
@@ -145,7 +154,13 @@ public class StartNewGameScreen extends JPanel
 			{
 				// Start a new game, and display it on the mainWindow:
 				mainWindow.displayNewScreen(new GameBoardScreen(
-				new Game(selectedDimension, enterPlayerSymbol.getText(), enterComputerSymbol.getText(), "MEDIUM") ) );
+				new Game(selectedDimension, enterPlayerSymbol.getText(), enterComputerSymbol.getText(), selectedDifficulty) ) );
+				
+				// Automatically resize the mainWindow so that each GameTile is 100 x 100 pixels each:
+				mainWindow.setSize(selectedDimension * 100, selectedDimension * 100);
+				
+				// Recenter the mainWindow:
+				mainWindow.setLocationRelativeTo(null);
 			}
 			else // Otherwise, "Quit" was selected.
 			{
@@ -156,5 +171,46 @@ public class StartNewGameScreen extends JPanel
 		} // End of method actionPerformed.
 		
 	} // End of class ButtonListener.
+	
+	
+	private class RadioButtonListener implements ItemListener
+	{
+
+		@Override
+		public void itemStateChanged (ItemEvent event)
+		{
+			JRadioButton selectedRadioButton;
+			
+			
+			// Check if this JRadioButton instance has been selected or deselected.
+			if (event.getStateChange() == ItemEvent.SELECTED)
+			{
+				// Because it has been selected, find out which game difficulty it represents:
+				selectedRadioButton = (JRadioButton) event.getItem();
+				selectedDifficulty = selectedRadioButton.getText();
+				
+				// Make sure the other JRadioButtons are unselected:
+				if ( selectedDifficulty.equals("EASY") )
+				{
+					mediumMode.setSelected(false);
+					hardMode.setSelected(false);
+				}
+				else if ( selectedDifficulty.equals("MEDIUM") )
+				{
+					easyMode.setSelected(false);
+					hardMode.setSelected(false);
+				}
+				else // selectedDifficulty.equals("HARD")
+				{
+					easyMode.setSelected(false);
+					mediumMode.setSelected(false);
+				}
+			}
+			
+			// Otherwise, do nothing.
+			
+		} // End of method itemStateChanged.
+		
+	} // End of class RadioButtonListener.
 	
 } // End of class StartNewGameScreen.

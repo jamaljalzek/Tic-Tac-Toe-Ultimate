@@ -11,7 +11,7 @@ public class MainWindow extends JFrame
 	public MainWindow ()
 	{
 		this.setTitle("Tic Tac Toe Ultimate");
-		this.setSize(500, 500);
+		this.setSize(400, 400);
 		this.setResizable(false);
 		this.setLayout( new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS) );
 		this.setLocationRelativeTo(null);
