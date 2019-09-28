@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public class ComputerMakeAMove
 {
-	private static Game game;
+	private static Game thisGame;
 	
 	private static Random randomIndex;
 	private static int computerTileCount;
@@ -24,10 +24,18 @@ public class ComputerMakeAMove
 	 */
 	public static void easyMode (Game thisGame)
 	{
+		ComputerMakeAMove.thisGame = thisGame;
+		
+		
+		if (thisGame.hasEnded)
+		{
+			return;
+		}
+		
 		// Randomly choose a spot on the game board:
+		randomIndex = new Random();
 		do
 		{
-			randomIndex = new Random();
 			chosenRow = randomIndex.nextInt(thisGame.dimension);
 			chosenColumn = randomIndex.nextInt(thisGame.dimension);
 			
@@ -36,7 +44,8 @@ public class ComputerMakeAMove
 				  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
 		
 		// Claim that GameTile:
-		claimAndCheck(thisGame);
+		System.out.println("Inside easyMode");
+		claimAndCheck(chosenRow, chosenColumn);
 		
 	} // End of method easyMode.
 	
@@ -54,44 +63,97 @@ public class ComputerMakeAMove
 	 */
 	public static void mediumMode (Game thisGame)
 	{
+		ComputerMakeAMove.thisGame = thisGame;
+		
+		
+		if (thisGame.hasEnded)
+		{
+			return;
+		}
+		
 		// 1. Find the row that is closest to completion by the computer:
-		searchRows(thisGame);
+		searchRows();
 		
 		// 2. Find the column that is closest to completion by the computer:
-		searchColumns(thisGame);
+		searchColumns();
 		
 		// 3. Find the diagonal that is closest to completion by the computer:
-		searchDiagonals(thisGame);
+		searchDiagonals();
 		
 		// 4. Next, pick the row, column, or diagonal that has the shortest path to victory:
-		selectBestPath(thisGame);
+		selectBestPath();
 		
 	} // End of method mediumMode.
 	
 	
 	/**
-	 * During this difficulty, the computer does use a strategy to win. Specifically, it will try
-	 * to place its tiles in a row, column, or diagonal to win.
+	 * During this difficulty, the computer will use the same strategy to win as described in mediumMode. However, unlike
+	 * mediumMode, the computer additionally will block the player from completing a row, column, or diagonal. In this game
+	 * mode, the player must have a strategy that leads them to a situation where they have two different ways of
+	 * winning in a single turn.
 	 * 
 	 * @param thisGame
 	 */
 	public static void hardMode (Game thisGame)
 	{
+		ComputerMakeAMove.thisGame = thisGame;
 		
-		// Use mediumMode for now, until hardMode is implemented:
+		
+		if (thisGame.hasEnded)
+		{
+			return;
+		}
+		
+		// First, we will check if we are in the position to win the game during this turn:
+		searchRows();
+		if ( bestRowCount == (thisGame.dimension - 1) )
+		{
+			chooseSpotInRow();
+			claimAndCheck(chosenRow, chosenColumn);
+			return;
+		}
+		searchColumns();
+		if ( bestColumnCount == (thisGame.dimension - 1) )
+		{
+			chooseSpotInColumn();
+			claimAndCheck(chosenRow, chosenColumn);
+			return;
+		}
+		searchDiagonals();
+		if ( bestDiagonalCount == (thisGame.dimension - 1) )
+		{
+			chooseSpotInDiagonal();
+			claimAndCheck(chosenRow, chosenColumn);
+			return;
+		}
+		
+		// At this point we know we are not in the position to immediately win, so we must check if the player
+		// is in the position of being 1 turn away from completing a row, column, or diagonal, and winning the game:
+		PreventPlayerFromWinning.checkRows();
+		PreventPlayerFromWinning.checkColumns();
+		PreventPlayerFromWinning.checkDiagonals();
+		
+		// If they were, we have blocked them and will now end our turn:
+		if (thisGame.isPlayersTurn)
+		{
+			return;
+		}
+		
+		// Otherwise, at this point we may aim to complete a row, column, or diagonal ourselves.
+		// So, we use the same strategy as in mediumMode:
 		mediumMode(thisGame);
 		
 	} // End of method hardMode.
 	
 	
 	//////////////////////////
-	//						//
+	//                      //
 	// Helper methods below //
-	//						//
+	//                      //
 	//////////////////////////
 	
 	
-	private static void searchRows (Game thisGame)
+	private static void searchRows ()
 	{
 		/// 1. Look for the row that is closest to completion by the computer:
 		
@@ -147,7 +209,8 @@ public class ComputerMakeAMove
 		
 	} // End of method searchRows.
 	
-	private static void searchColumns (Game thisGame)
+	
+	private static void searchColumns ()
 	{
 		/// 2. Look for the column that is closest to completion by the computer:
 		
@@ -203,7 +266,8 @@ public class ComputerMakeAMove
 		
 	} // End of method searchColumns.
 	
-	private static void searchDiagonals (Game thisGame)
+	
+	private static void searchDiagonals ()
 	{
 		// These are the indexes that the two for loops use to search each spot in each diagonal:
 		int row, column;
@@ -305,7 +369,7 @@ public class ComputerMakeAMove
 	} // End of method searchDiagonals.
 	
 	
-	private static void selectBestPath (Game thisGame)
+	private static void selectBestPath ()
 	{
 		int randomChoice;
 		
@@ -340,63 +404,63 @@ public class ComputerMakeAMove
 			if (randomChoice == 0) // Choose the row:
 			{
 				// Randomly choose a spot in the best row:
-				chooseSpotInRow(thisGame);
+				chooseSpotInRow();
 			}
 			else if (randomChoice == 1) // Choose the column:
 			{
 				// Randomly choose a spot in the best column:
-				chooseSpotInColumn(thisGame);
+				chooseSpotInColumn();
 			}
 			else // randomChoice == 2, so choose the diagonal:
 			{
 				// Randomly choose a spot in the best diagonal:
-				chooseSpotInDiagonal(thisGame);
+				chooseSpotInDiagonal();
 			}
 		}
 		// R > C >= D
 		else if (bestRowCount >= bestColumnCount && bestColumnCount >= bestDiagonalCount)
 		{
 			// Randomly choose a spot in the best row:
-			chooseSpotInRow(thisGame);
+			chooseSpotInRow();
 		}
 		// R > D >= C
 		else if (bestRowCount >= bestDiagonalCount && bestDiagonalCount >= bestColumnCount)
 		{
 			// Randomly choose a spot in the best row:
-			chooseSpotInRow(thisGame);
+			chooseSpotInRow();
 		}
 		// C > R >= D
 		else if (bestColumnCount >= bestRowCount && bestRowCount >= bestDiagonalCount)
 		{
 			// Randomly choose a spot in the best column:
-			chooseSpotInColumn(thisGame);
+			chooseSpotInColumn();
 		}
 		// C > D >= R
 		else if (bestColumnCount >= bestDiagonalCount && bestDiagonalCount >= bestRowCount)
 		{
 			// Randomly choose a spot in the best column:
-			chooseSpotInColumn(thisGame);
+			chooseSpotInColumn();
 		}
 		// D > R >= C
 		else if (bestDiagonalCount >= bestRowCount && bestRowCount >= bestColumnCount)
 		{
 			// Randomly choose a spot in the best diagonal:
-			chooseSpotInDiagonal(thisGame);
+			chooseSpotInDiagonal();
 		}
 		// D > C >= R
 		else if (bestDiagonalCount >= bestColumnCount && bestColumnCount >= bestRowCount)
 		{
 			// Randomly choose a spot in the best diagonal:
-			chooseSpotInDiagonal(thisGame);
+			chooseSpotInDiagonal();
 		}
 		
 		// Claim that GameTile:
-		claimAndCheck(thisGame);
+		claimAndCheck(chosenRow, chosenColumn);
 		
 	} // End of method selectBestPath.
 	
 	
-	private static void chooseSpotInRow (Game thisGame)
+	private static void chooseSpotInRow ()
 	{
 		// Randomly choose a spot in the best row:
 		randomIndex = new Random();
@@ -409,10 +473,10 @@ public class ComputerMakeAMove
 		} while ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
 				  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
 		
-	} // End of method
+	} // End of method chooseSpotInRow.
 	
 	
-	private static void chooseSpotInColumn (Game thisGame)
+	private static void chooseSpotInColumn ()
 	{
 		// Randomly choose a spot in the best column:
 		chosenColumn = bestColumnLocation;
@@ -425,10 +489,10 @@ public class ComputerMakeAMove
 		} while ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
 				  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
 		
-	} // End of method
+	} // End of method chooseSpotInColumn.
 	
 	
-	private static void chooseSpotInDiagonal (Game thisGame)
+	private static void chooseSpotInDiagonal ()
 	{
 		// Randomly choose a spot in the best diagonal.
 		randomIndex = new Random();
@@ -468,17 +532,234 @@ public class ComputerMakeAMove
 					  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
 		}
 		
-	} // End of method
+	} // End of method chooseSpotInDiagonal.
 	
 	
-	private static void claimAndCheck (Game thisGame)
+//	private static void claimAndCheck ()
+//	{
+//		// Claim that GameTile.
+//		thisGame.gameBoard [chosenRow] [chosenColumn].setText(thisGame.computerSymbol);
+//		thisGame.gameBoard [chosenRow] [chosenColumn].setEnabled(false);
+//		
+//		thisGame.checkGameStatus( thisGame.gameBoard [chosenRow] [chosenColumn] );
+//		
+//	} // End of method claimAndCheck.
+	
+	
+	private static void claimAndCheck (int row, int column)
 	{
-		// Claim that GameTile.
-		thisGame.gameBoard [chosenRow] [chosenColumn].setText(thisGame.computerSymbol);
-		thisGame.gameBoard [chosenRow] [chosenColumn].setEnabled(false);
+		// Claim that GameTile:
+		thisGame.gameBoard [row] [column].setText(thisGame.computerSymbol);
+		thisGame.gameBoard [row] [column].setEnabled(false);
+		++thisGame.numberOfSpotsClaimed;
+		thisGame.isPlayersTurn = true;
 		
-		thisGame.checkGameStatus( thisGame.gameBoard [chosenRow] [chosenColumn] );
+		System.out.println("Inside claimAndCheck");
+		thisGame.checkGameStatus( thisGame.gameBoard [row] [column] );
 		
 	} // End of method claimAndCheck.
+	
+	
+	private static class PreventPlayerFromWinning
+	{
+		private static void checkRows ()
+		{
+			int playerTileCount;
+			int emptyColumnIndex;
+			
+			
+			// In each row, scan through it and check if the player is 1 turn away from completing it,
+			// thus winning the game:
+			
+			// Search through each row on the game board:
+			SearchRows: for (int row = 0; row < thisGame.dimension; ++row)
+			{
+				playerTileCount = 0;
+				emptyColumnIndex = 0;
+				for (int column = 0; column < thisGame.dimension; ++column)
+				{
+					// Check if we have already placed a tile in this row, thus permanently blocking the player from
+					// completing it.
+					// This prevents the computer from trying to block the player, in the same row, multiple times:
+					if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+					{
+						// Move onto the next row:
+						continue SearchRows;
+					}
+					
+					// Keep track of all of the player's tiles we find in this row:
+					if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+					{
+						++playerTileCount;
+					}
+					
+					// Otherwise, this spot in this row is empty, so keep track of it in case it's the only one left
+					// and we must fill it:
+					else
+					{
+						emptyColumnIndex = column;
+					}
+				}
+				
+				// Now that we have searched the whole row, check if the player is 1 turn away from completing it:
+				if ( playerTileCount == (thisGame.dimension - 1) )
+				{
+					// BLOCK THEM!
+					 claimAndCheck (row, emptyColumnIndex);
+				}
+			}
+			
+		} // End of method checkRows.
+		
+		
+		private static void checkColumns ()
+		{
+			int playerTileCount;
+			int emptyRowIndex;
+			
+			
+			// In each column, scan through it and check if the player is 1 turn away from completing it,
+			// thus winning the game:
+			
+			// Search through each column on the game board:
+			SearchColumns: for (int column = 0; column < thisGame.dimension; ++column)
+			{
+				playerTileCount = 0;
+				emptyRowIndex = 0;
+				for (int row = 0; row < thisGame.dimension; ++row)
+				{
+					// Check if we have already placed a tile in this column, thus permanently blocking the player from
+					// completing it.
+					// This prevents the computer from trying to block the player, in the same column, multiple times:
+					if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+					{
+						// Move onto the next column:
+						continue SearchColumns;
+					}
+					
+					// Keep track of all of the player's tiles we find in this column:
+					if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+					{
+						++playerTileCount;
+					}
+					
+					// Otherwise, this spot in this column is empty, so keep track of it in case it's the only one left
+					// and we must fill it:
+					else
+					{
+						emptyRowIndex = row;
+					}
+				}
+				
+				// Now that we have searched the whole column, check if the player is 1 turn away from completing it:
+				if ( playerTileCount == (thisGame.dimension - 1) )
+				{
+					// BLOCK THEM!
+					 claimAndCheck (emptyRowIndex, column);
+				}
+			}
+			
+		} // End of method checkColumns.
+		
+		
+		private static void checkDiagonals ()
+		{
+			int playerTileCount;
+			int emptyRowIndex, emptyColumnIndex;
+			
+			
+			// In each diagonal, scan through it and check if the player is 1 turn away from completing it,
+			// thus winning the game:
+			
+			// Scan the first diagonal, which starts at the top left and moves down-right:
+			playerTileCount = 0;
+			emptyRowIndex = 0;
+			emptyColumnIndex = 0;
+			for (int row = 0, column = 0; row < thisGame.dimension && column < thisGame.dimension; ++row, ++column)
+			{
+				// Check if we have already placed a tile in this diagonal, thus permanently blocking the player from
+				// completing it.
+				// This prevents the computer from trying to block the player, in the same diagonal, multiple times:
+				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+				{
+					// Move onto scanning the next diagonal:
+					playerTileCount = -1;
+					break;
+				}
+				
+				// Keep track of all of the player's tiles we find in this diagonal:
+				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+				{
+					++playerTileCount;
+				}
+				
+				// Otherwise, this spot in this diagonal is empty, so keep track of it in case it's the only one left
+				// and we must fill it:
+				else
+				{
+					emptyRowIndex = row;
+					emptyColumnIndex = column;
+				}
+			}
+			
+			// Now that we have scanned the first diagonal, check if the player is 1 turn away from completing it.
+			// We skip this if playerTileCount is set to -1, because the above diagonal was already blocked:
+			if ( playerTileCount == (thisGame.dimension - 1) )
+			{
+				// BLOCK THEM!
+				claimAndCheck(emptyRowIndex, emptyColumnIndex);
+			}
+			
+			// Then, scan the second diagonal, which starts at the bottom left and moves up-right:
+			playerTileCount = 0;
+			emptyRowIndex = 0;
+			emptyColumnIndex = 0;
+			for (int row = thisGame.dimension - 1, column = 0; row >= 0 && column < thisGame.dimension; --row, ++column)
+			{
+				// Check if we have already placed a tile in this diagonal, thus permanently blocking the player from
+				// completing it.
+				// This prevents the computer from trying to block the player, in the same diagonal, multiple times:
+				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+				{
+					// We now know both diagonals have already been blocked by the computer, so we exit the method:
+					return;
+				}
+				
+				// Keep track of all of the player's tiles we find in this diagonal:
+				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+				{
+					++playerTileCount;
+				}
+				
+				// Otherwise, this spot in this diagonal is empty, so keep track of it in case it's the only one left
+				// and we must fill it:
+				else
+				{
+					emptyRowIndex = row;
+					emptyColumnIndex = column;
+				}
+			}
+			
+			// Now that we have scanned the second diagonal, check if the player is 1 turn away from completing it:
+			if ( playerTileCount == (thisGame.dimension - 1) )
+			{
+				claimAndCheck(emptyRowIndex, emptyColumnIndex);
+			}
+			
+		} // End of method checkDiagonals.
+		
+		
+//		private static void claimAndCheck (int row, int column)
+//		{
+//			// Claim that GameTile.
+//			thisGame.gameBoard [row] [column].setText(thisGame.computerSymbol);
+//			thisGame.gameBoard [row] [column].setEnabled(false);
+//			thisGame.isPlayersTurn = true;
+//			
+//			thisGame.checkGameStatus( thisGame.gameBoard [row] [column] );
+//			
+//		} // End of method claimAndCheck.
+		
+	} // End of class PreventPlayerFromWinning.
 	
 } // End of class ComputerMakeAMove.

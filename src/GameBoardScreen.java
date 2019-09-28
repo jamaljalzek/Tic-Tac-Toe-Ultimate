@@ -67,14 +67,18 @@ public class GameBoardScreen extends JPanel
 			clickedTile = (GameTile) event.getSource();
 			clickedTile.setText(thisGame.playerSymbol);
 			clickedTile.setEnabled(false);
+			++thisGame.numberOfSpotsClaimed;
+			thisGame.isPlayersTurn = false;
 			
 			//System.out.println( thisGame.gameBoard [clickedTile.row] [clickedTile.column].getText() );
 			
+			System.out.println("Inside actionPerformed");
 			thisGame.checkGameStatus(clickedTile);
 			
 			// Now, let the computer make a move in response to the player:
 			if ( thisGame.difficulty.equals("EASY") )
 			{
+				System.out.println("Inside actionPerformed EASY");
 				ComputerMakeAMove.easyMode(thisGame);
 			}
 			else if ( thisGame.difficulty.equals("MEDIUM") )

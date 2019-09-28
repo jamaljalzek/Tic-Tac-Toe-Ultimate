@@ -3,20 +3,22 @@
 public class Game
 {
 	protected final int dimension;
+	protected int numberOfSpotsClaimed;
 	protected final String playerSymbol, computerSymbol;
 	protected GameTile [] [] gameBoard;
+	protected boolean hasEnded;
 	protected boolean isPlayersTurn;
 	protected String difficulty; // Set to either “EASY”, “MEDIUM”, “HARD”, etc.
-	protected GameBoardScreen gameBoardGUI;
 	
 	
 	public Game (int dimension, String playerSymbol, String computerSymbol, String difficulty)
 	{
 		this.dimension = dimension;
+		this.numberOfSpotsClaimed = 0;
 		this.playerSymbol = playerSymbol;
 		this.computerSymbol = computerSymbol;
+		this.hasEnded = false;
 		this.difficulty = difficulty;
-		gameBoardGUI = new GameBoardScreen(this);
 		
 	} // End of Constructor.
 	
@@ -33,6 +35,8 @@ public class Game
 		String opponent;
 		int rowTileCount, columnTileCount, bottomLeftdiagonalTileCount, topLeftdiagonalTileCount;
 		
+		
+		System.out.println("Number of tiles claimed: " + numberOfSpotsClaimed);
 		
 		// There's no reason to re-scan the whole game board, because we know where the most recent change occurred
 		// (selectedTile).
@@ -71,7 +75,7 @@ public class Game
 			// Else, move right one spot.
 		}
 		
-		// Starting from the bottom, scan vertically for X GameTiles in the column the selectedTile is in:
+		// Starting from the top, scan vertically for X GameTiles in the column the selectedTile is in:
 		columnTileCount = 0;
 		for (int currentRow = 0; currentRow < dimension; ++currentRow)
 		{
@@ -131,11 +135,34 @@ public class Game
 			}
 		}
 		
-		// Finally, check to see if the player/computer has completed a row, column, and/or one of the two diagonals:
-		if (rowTileCount == dimension || columnTileCount == dimension ||
-			bottomLeftdiagonalTileCount == dimension || topLeftdiagonalTileCount == dimension)
+		// Check to see if the player/computer has completed a row, column, and/or one of the two diagonals:
+		if (rowTileCount == dimension)
 		{
-			new GameEndWindow(selectedTile.getText() + " has won!");
+			this.hasEnded = true;
+			new GameEndWindow(selectedTile.getText() + " has won a row!");
+		}
+		else if (columnTileCount == dimension)
+		{
+			this.hasEnded = true;
+			new GameEndWindow(selectedTile.getText() + " has won a column!");
+		}
+		else if (bottomLeftdiagonalTileCount == dimension)
+		{
+			this.hasEnded = true;
+			new GameEndWindow(selectedTile.getText() + " has won the NE diagonal!");
+		}
+		else if (topLeftdiagonalTileCount == dimension)
+		{
+			this.hasEnded = true;
+			new GameEndWindow(selectedTile.getText() + " has won the SW diagonal!");
+		}
+		
+		// Finally, it is possible that the game has ended in a draw/stale mate. Check if all spots on the game board
+		// have been filled:
+		else if ( numberOfSpotsClaimed == (dimension * dimension) )
+		{
+			this.hasEnded = true;
+			new GameEndWindow("DRAW!");
 		}
 		
 	} // End of method checkGameStatus.
