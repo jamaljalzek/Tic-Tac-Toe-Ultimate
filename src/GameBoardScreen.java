@@ -21,7 +21,7 @@ public class GameBoardScreen extends JPanel
 		
 		// Now, let the computer make the opening move.
 		// Because no moves have been made yet, we use easyMode to randomly select a spot:
-		ComputerMakeAMove.easyMode(thisGame);
+		ComputerMakeAMove.easyMode();
 		
 	} // End of Constructor.
 	
@@ -79,15 +79,15 @@ public class GameBoardScreen extends JPanel
 			if ( thisGame.difficulty.equals("EASY") )
 			{
 				System.out.println("Inside actionPerformed EASY");
-				ComputerMakeAMove.easyMode(thisGame);
+				ComputerMakeAMove.easyMode();
 			}
 			else if ( thisGame.difficulty.equals("MEDIUM") )
 			{
-				ComputerMakeAMove.mediumMode(thisGame);
+				ComputerMakeAMove.mediumMode();
 			}
 			else //  thisGame.difficulty.equals("HARD") 
 			{
-				ComputerMakeAMove.hardMode(thisGame);
+				ComputerMakeAMove.hardMode();
 			}
 			
 		} // End of method actionPerformed.

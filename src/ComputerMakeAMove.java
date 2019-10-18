@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public class ComputerMakeAMove
 {
-	private static Game thisGame;
+	protected static Game thisGame; // Initialized in the Game Constructor.
 	
 	private static Random randomIndex;
 	private static int computerTileCount;
@@ -22,11 +22,8 @@ public class ComputerMakeAMove
 	 * 
 	 * @param thisGame
 	 */
-	public static void easyMode (Game thisGame)
+	public static void easyMode ()
 	{
-		ComputerMakeAMove.thisGame = thisGame;
-		
-		
 		if (thisGame.hasEnded)
 		{
 			return;
@@ -49,16 +46,12 @@ public class ComputerMakeAMove
 	 *  
 	 * @param thisGame
 	 */
-	public static void mediumMode (Game thisGame)
+	public static void mediumMode ()
 	{
-		ComputerMakeAMove.thisGame = thisGame;
-		
-		
 		if (thisGame.hasEnded)
 		{
 			return;
 		}
-		
 		searchForRowClosestToCompletionByComputer();
 		searchForColumnClosestToCompletionByComputer();
 		searchForDiagonalClosestToCompletionByComputer();		
@@ -75,11 +68,8 @@ public class ComputerMakeAMove
 	 * 
 	 * @param thisGame
 	 */
-	public static void hardMode (Game thisGame)
+	public static void hardMode ()
 	{
-		ComputerMakeAMove.thisGame = thisGame;
-		
-		
 		if (thisGame.hasEnded)
 		{
 			return;
@@ -105,14 +95,14 @@ public class ComputerMakeAMove
 		
 		// Otherwise, at this point we may aim to complete a row, column, or diagonal ourselves.
 		// So, we use the same strategy as in mediumMode:
-		mediumMode(thisGame);
+		mediumMode();
 		
 	} // End of method hardMode.
 	
 	
 	//////////////////////////
 	//                      //
-	// Helper methods below //
+	// HELPER METHODS BELOW //
 	//                      //
 	//////////////////////////
 	
@@ -134,8 +124,6 @@ public class ComputerMakeAMove
 	
 	private static void searchForRowClosestToCompletionByComputer ()
 	{
-		/// 1. Look for the row that is closest to completion by the computer:
-		
 		// Starting from the top row and moving down, scan through each row, finding the row with
 		// the most computer tiles and NO player tiles (if there is a player’s tile in the row, then
 		// that row can no longer be won by the computer):
@@ -191,8 +179,6 @@ public class ComputerMakeAMove
 	
 	private static void searchForColumnClosestToCompletionByComputer ()
 	{
-		/// 2. Look for the column that is closest to completion by the computer:
-		
 		// Starting from the left column and moving right, scan through each column, finding the column with
 		// the most computer tiles and NO player tiles (if there is a player’s tile in the column, then
 		// that column can no longer be won by the computer):
@@ -361,9 +347,6 @@ public class ComputerMakeAMove
 	
 	private static void selectPathClosestToCompletionByComputer ()
 	{
-		int randomChoice;
-		
-		
 		/////////////////////////////////// DEBUGGING ///////////////////////////////////
 		System.out.println("best row count: " + bestRowCount + '\n' + 
 				   "best row index: " + bestRowLocation);
@@ -375,79 +358,61 @@ public class ComputerMakeAMove
 				   "best diagonal index: " + bestDiagonalLocation);
 		/////////////////////////////////////////////////////////////////////////////////
 		
-		/// 4. Next, pick the row, column, or diagonal that has the shortest path to victory:
-		
-		// Compare the best row, best column, and best diagonal found:
-		
-		// -1 == -1 == -1
-		if (bestRowCount == -1 && bestColumnCount == -1 && bestDiagonalCount == -1)
-		{
-			// Randomly choose any spot on the game board:
-			easyMode(thisGame);
-		}
-		// R == C == D
-		else if (bestRowCount == bestColumnCount && bestColumnCount == bestDiagonalCount)
-		{
-			// Randomly choose between the 3:
-			randomChoice = new Random().nextInt(3);
-			
-			if (randomChoice == 0) // Choose the row:
-			{
-				// Randomly choose a spot in the best row:
-				chooseRandomSpotInBestRow();
-			}
-			else if (randomChoice == 1) // Choose the column:
-			{
-				// Randomly choose a spot in the best column:
-				chooseRandomSpotInBestColumn();
-			}
-			else // randomChoice == 2, so choose the diagonal:
-			{
-				// Randomly choose a spot in the best diagonal:
-				chooseRandomSpotInBestDiagonal();
-			}
-		}
-		// R > C >= D
-		else if (bestRowCount >= bestColumnCount && bestColumnCount >= bestDiagonalCount)
-		{
-			// Randomly choose a spot in the best row:
-			chooseRandomSpotInBestRow();
-		}
-		// R > D >= C
-		else if (bestRowCount >= bestDiagonalCount && bestDiagonalCount >= bestColumnCount)
-		{
-			// Randomly choose a spot in the best row:
-			chooseRandomSpotInBestRow();
-		}
-		// C > R >= D
-		else if (bestColumnCount >= bestRowCount && bestRowCount >= bestDiagonalCount)
-		{
-			// Randomly choose a spot in the best column:
-			chooseRandomSpotInBestColumn();
-		}
-		// C > D >= R
-		else if (bestColumnCount >= bestDiagonalCount && bestDiagonalCount >= bestRowCount)
-		{
-			// Randomly choose a spot in the best column:
-			chooseRandomSpotInBestColumn();
-		}
-		// D > R >= C
-		else if (bestDiagonalCount >= bestRowCount && bestRowCount >= bestColumnCount)
-		{
-			// Randomly choose a spot in the best diagonal:
-			chooseRandomSpotInBestDiagonal();
-		}
-		// D > C >= R
-		else if (bestDiagonalCount >= bestColumnCount && bestColumnCount >= bestRowCount)
-		{
-			// Randomly choose a spot in the best diagonal:
-			chooseRandomSpotInBestDiagonal();
-		}
-		
-		// Claim that GameTile:
+		determineIfAllOptionsAreEqual();
+		determineIfWeWillSelectARow();
+		determineIfWeWillSelectAColumn();
+		determineIfWeWillSelectADiagonal();
 		claimSpotOnGameBoard(chosenRow, chosenColumn);
 		
 	} // End of method selectBestPath.
+	
+	
+	private static void determineIfAllOptionsAreEqual ()
+	{
+		// -1 == -1 == -1 or R == C == D
+		if (bestRowCount == -1 && bestColumnCount == -1 && bestDiagonalCount == -1 ||
+			bestRowCount == bestColumnCount && bestColumnCount == bestDiagonalCount)
+		{
+			chooseRandomSpotOnGameBoard();
+		}
+		
+	} // End of method determineIfAllOptionsAreEqual.
+	
+	
+	private static void determineIfWeWillSelectARow ()
+	{
+		// R > C >= D or R > D >= C
+		if (bestRowCount >= bestColumnCount && bestColumnCount >= bestDiagonalCount ||
+			bestRowCount >= bestDiagonalCount && bestDiagonalCount >= bestColumnCount)
+		{
+			chooseRandomSpotInBestRow();
+		}
+		
+	} // End of method determineIfWeWillSelectARow.
+	
+	
+	private static void determineIfWeWillSelectAColumn()
+	{
+		// C > R >= D or C > D >= R
+		if (bestColumnCount >= bestRowCount && bestRowCount >= bestDiagonalCount ||
+			bestColumnCount >= bestDiagonalCount && bestDiagonalCount >= bestRowCount)
+		{
+			chooseRandomSpotInBestColumn();
+		}
+		
+	} // End of method determineIfWeWillSelectAColumn.
+	
+	
+	private static void determineIfWeWillSelectADiagonal ()
+	{
+		// D > R >= C or D > C >= R
+		if (bestDiagonalCount >= bestRowCount && bestRowCount >= bestColumnCount ||
+			bestDiagonalCount >= bestColumnCount && bestColumnCount >= bestRowCount)
+		{
+			chooseRandomSpotInBestDiagonal();
+		}
+
+	} // End of method determineIfWeWillSelectADiagonal.
 	
 	
 	private static boolean canTheComputerWinTheGameThisTurn ()
@@ -580,17 +545,6 @@ public class ComputerMakeAMove
 		}
 		
 	} // End of method chooseRandomSpotInBestDiagonal.
-	
-	
-//	private static void claimAndCheck ()
-//	{
-//		// Claim that GameTile.
-//		thisGame.gameBoard [chosenRow] [chosenColumn].setText(thisGame.computerSymbol);
-//		thisGame.gameBoard [chosenRow] [chosenColumn].setEnabled(false);
-//		
-//		thisGame.checkGameStatus( thisGame.gameBoard [chosenRow] [chosenColumn] );
-//		
-//	} // End of method claimAndCheck.
 	
 	
 	private static void claimSpotOnGameBoard (int row, int column)
@@ -793,18 +747,6 @@ public class ComputerMakeAMove
 			}
 			
 		} // End of method checkDiagonals.
-		
-		
-//		private static void claimAndCheck (int row, int column)
-//		{
-//			// Claim that GameTile.
-//			thisGame.gameBoard [row] [column].setText(thisGame.computerSymbol);
-//			thisGame.gameBoard [row] [column].setEnabled(false);
-//			thisGame.isPlayersTurn = true;
-//			
-//			thisGame.checkGameStatus( thisGame.gameBoard [row] [column] );
-//			
-//		} // End of method claimAndCheck.
 		
 	} // End of class PreventPlayerFromWinning.
 	
