@@ -566,41 +566,18 @@ public class ComputerMakeAMove
 	
 	private static class PreventPlayerFromWinning
 	{
+		private static int playerTileCount;
+		private static int emptyColumnIndex, emptyRowIndex;
+		
+		
 		private static void checkRows ()
 		{
-			int playerTileCount;
-			int emptyColumnIndex;
-			
-			
 			// In each row, scan through it and check if the player is 1 turn away from completing it,
 			// thus winning the game:
 			// Search through each row on the game board:
-			SearchRows: for (int row = 0; row < thisGame.dimension; ++row)
+			for (int row = 0; row < thisGame.dimension; ++row)
 			{
-				playerTileCount = 0;
-				emptyColumnIndex = 0;
-				for (int column = 0; column < thisGame.dimension; ++column)
-				{
-					// Check if we have already placed a tile in this row, thus permanently blocking the player from
-					// completing it.
-					// This prevents the computer from trying to block the player, in the same row, multiple times:
-					if ( isThisSpotClaimedByComputer(row, column) )
-					{
-						// Move onto the next row:
-						continue SearchRows;
-					}
-					// Keep track of all of the player's tiles we find in this row:
-					if ( isThisSpotClaimedByPlayer(row, column) )
-					{
-						++playerTileCount;
-					}
-					// Otherwise, this spot in this row is empty, so keep track of it in case it's the only one left
-					// and we must fill it:
-					else
-					{
-						emptyColumnIndex = column;
-					}
-				}
+				searchColumnsInCurrentRow(row);
 				// Now that we have searched the whole row, check if the player is 1 turn away from completing it:
 				if ( playerTileCount == (thisGame.dimension - 1) )
 				{
@@ -612,41 +589,45 @@ public class ComputerMakeAMove
 		} // End of method checkRows.
 		
 		
+		private static void searchColumnsInCurrentRow (int currentRow)
+		{
+			playerTileCount = 0;
+			emptyColumnIndex = 0;
+			for (int column = 0; column < thisGame.dimension; ++column)
+			{
+				// Check if we have already placed a tile in this row, thus permanently blocking the player from
+				// completing it.
+				// This prevents the computer from trying to block the player, in the same row, multiple times:
+				if ( isThisSpotClaimedByComputer(currentRow, column) )
+				{
+					// Move onto the next row:
+					playerTileCount = -1;
+					return;
+				}
+				// Keep track of all of the player's tiles we find in this row:
+				if ( isThisSpotClaimedByPlayer(currentRow, column) )
+				{
+					++playerTileCount;
+				}
+				// Otherwise, this spot in this row is empty, so keep track of it in case it's the only one left
+				// and we must fill it:
+				else
+				{
+					emptyColumnIndex = column;
+				}
+			}
+			
+		} // End of method searchColumnsInCurrentRow.
+		
+		
 		private static void checkColumns ()
 		{
-			int playerTileCount;
-			int emptyRowIndex;
-			
-			
 			// In each column, scan through it and check if the player is 1 turn away from completing it,
 			// thus winning the game:
 			// Search through each column on the game board:
-			SearchColumns: for (int column = 0; column < thisGame.dimension; ++column)
+			for (int column = 0; column < thisGame.dimension; ++column)
 			{
-				playerTileCount = 0;
-				emptyRowIndex = 0;
-				for (int row = 0; row < thisGame.dimension; ++row)
-				{
-					// Check if we have already placed a tile in this column, thus permanently blocking the player from
-					// completing it.
-					// This prevents the computer from trying to block the player, in the same column, multiple times:
-					if ( isThisSpotClaimedByComputer(row, column) )
-					{
-						// Move onto the next column:
-						continue SearchColumns;
-					}
-					// Keep track of all of the player's tiles we find in this column:
-					if ( isThisSpotClaimedByPlayer(row, column) )
-					{
-						++playerTileCount;
-					}
-					// Otherwise, this spot in this column is empty, so keep track of it in case it's the only one left
-					// and we must fill it:
-					else
-					{
-						emptyRowIndex = row;
-					}
-				}
+				searchRowsInCurrentColumn(column);
 				// Now that we have searched the whole column, check if the player is 1 turn away from completing it:
 				if ( playerTileCount == (thisGame.dimension - 1) )
 				{
@@ -658,14 +639,61 @@ public class ComputerMakeAMove
 		} // End of method checkColumns.
 		
 		
+		private static void searchRowsInCurrentColumn (int currentColumn)
+		{
+			playerTileCount = 0;
+			emptyRowIndex = 0;
+			for (int row = 0; row < thisGame.dimension; ++row)
+			{
+				// Check if we have already placed a tile in this column, thus permanently blocking the player from
+				// completing it.
+				// This prevents the computer from trying to block the player, in the same column, multiple times:
+				if ( isThisSpotClaimedByComputer(row, currentColumn) )
+				{
+					// Move onto the next column:
+					playerTileCount = -1;
+					return;
+				}
+				// Keep track of all of the player's tiles we find in this column:
+				if ( isThisSpotClaimedByPlayer(row, currentColumn) )
+				{
+					++playerTileCount;
+				}
+				// Otherwise, this spot in this column is empty, so keep track of it in case it's the only one left
+				// and we must fill it:
+				else
+				{
+					emptyRowIndex = row;
+				}
+			}
+			
+		} // End of method searchRowsInCurrentColumn.
+		
+		
 		private static void checkDiagonals ()
 		{
-			int playerTileCount;
-			int emptyRowIndex, emptyColumnIndex;
-			
-			
 			// In each diagonal, scan through it and check if the player is 1 turn away from completing it,
 			// thus winning the game:
+			checkDownRightDiagonal();
+			// Now that we have scanned the first diagonal, check if the player is 1 turn away from completing it.
+			// We skip this if playerTileCount is set to -1, because the above diagonal was already blocked:
+			if ( playerTileCount == (thisGame.dimension - 1) )
+			{
+				// BLOCK THEM!
+				claimSpotOnGameBoard(emptyRowIndex, emptyColumnIndex);
+			}
+			checkUpRightDiagonal();
+			// Now that we have scanned the second diagonal, check if the player is 1 turn away from completing it:
+			if ( playerTileCount == (thisGame.dimension - 1) )
+			{
+				claimSpotOnGameBoard(emptyRowIndex, emptyColumnIndex);
+			}
+			
+		} // End of method checkDiagonals.
+		
+		
+		private static void checkDownRightDiagonal ()
+		{
 			// Scan the first diagonal, which starts at the top left and moves down-right:
 			playerTileCount = 0;
 			emptyRowIndex = 0;
@@ -694,13 +722,12 @@ public class ComputerMakeAMove
 					emptyColumnIndex = column;
 				}
 			}
-			// Now that we have scanned the first diagonal, check if the player is 1 turn away from completing it.
-			// We skip this if playerTileCount is set to -1, because the above diagonal was already blocked:
-			if ( playerTileCount == (thisGame.dimension - 1) )
-			{
-				// BLOCK THEM!
-				claimSpotOnGameBoard(emptyRowIndex, emptyColumnIndex);
-			}
+			
+		} // End of method checkDownRightDiagonal.
+		
+		
+		private static void checkUpRightDiagonal ()
+		{
 			// Then, scan the second diagonal, which starts at the bottom left and moves up-right:
 			playerTileCount = 0;
 			emptyRowIndex = 0;
@@ -728,13 +755,8 @@ public class ComputerMakeAMove
 					emptyColumnIndex = column;
 				}
 			}
-			// Now that we have scanned the second diagonal, check if the player is 1 turn away from completing it:
-			if ( playerTileCount == (thisGame.dimension - 1) )
-			{
-				claimSpotOnGameBoard(emptyRowIndex, emptyColumnIndex);
-			}
 			
-		} // End of method checkDiagonals.
+		} // End of method checkUpRightDiagonal.
 		
 	} // End of class PreventPlayerFromWinning.
 	
