@@ -114,12 +114,17 @@ public class ComputerMakeAMove
 		{
 			chosenRow = randomIndex.nextInt(thisGame.dimension);
 			chosenColumn = randomIndex.nextInt(thisGame.dimension);
-			
-		// If that spot was already claimed by the player or computer, then try again:
-		} while ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
-				  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
+		} while ( isChosenSpotAlreadyTaken() );
 		
 	} // End of method chooseRandomSpotOnGameBoard.
+	
+	
+	private static boolean isChosenSpotAlreadyTaken ()
+	{
+		return ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
+				 thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
+		
+	} // End of method isChosenSpotAlreadyTaken.
 	
 	
 	private static void searchForRowClosestToCompletionByComputer ()
@@ -129,30 +134,9 @@ public class ComputerMakeAMove
 		// that row can no longer be won by the computer):
 		bestRowLocation = -1;
 		bestRowCount = 0;
-		SearchRows: for (int row = 0; row < thisGame.dimension; ++row)
+		for (int row = 0; row < thisGame.dimension; ++row)
 		{
-			// For the current row, starting from the left and moving to the right, scan
-			// through all of the spots:
-			computerTileCount = 0;
-			for (int column = 0; column < thisGame.dimension; ++column)
-			{
-				// If we find that the current spot in this row has been claimed by the player, then move
-				// onto the next row:
-				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
-				{
-					continue SearchRows;
-				}
-				
-				// Otherwise, check if the current spot is already claimed by the computer:
-				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
-				{
-					// Increment the count:
-					++computerTileCount;
-				}
-				
-				// Else, it's just an empty spot, so move onto the next spot in this row.
-			}
-			
+			searchColumnsInCurrentRow (row);
 			// We have searched through all the spots in the current row.
 			// Finally, check if we found more spots claimed by the computer in this current row than
 			// the previous row we have recorded with the most spots.
@@ -162,10 +146,8 @@ public class ComputerMakeAMove
 				bestRowLocation = row;
 				bestRowCount = computerTileCount;
 			}
-			
 			// Otherwise, move onto the next row in hopes of something better.
 		}
-		
 		// We have now searched all of the rows on the game board.
 		// bestRowLocation will be equal to -1 if all rows have at least 1 spot that is claimed by the player.
 		// In this case, we set bestRowCount to -1 so rows will not be considered in selectBestPath:
@@ -177,6 +159,46 @@ public class ComputerMakeAMove
 	} // End of method searchRows.
 	
 	
+	private static void searchColumnsInCurrentRow (int currentRow)
+	{
+		// For the current row, starting from the left and moving to the right, scan
+		// through all of the spots:
+		computerTileCount = 0;
+		for (int column = 0; column < thisGame.dimension; ++column)
+		{
+			// If we find that the current spot in this row has been claimed by the player, then move
+			// onto the next row:
+			if ( isThisSpotClaimedByPlayer(currentRow, column) )
+			{
+				computerTileCount = -1;
+				return;
+			}
+			// Otherwise, check if the current spot is already claimed by the computer:
+			if ( isThisSpotClaimedByComputer(currentRow, column) )
+			{
+				// Increment the count:
+				++computerTileCount;
+			}
+			// Else, it's just an empty spot, so move onto the next spot in this row.
+		}
+		
+	} // End of method searchColumnsInCurrentRow.
+	
+	
+	private static boolean isThisSpotClaimedByPlayer (int row, int column)
+	{
+		return thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol);
+		
+	} // End of method isThisSpotClaimedByPlayer.
+	
+	
+	private static boolean isThisSpotClaimedByComputer (int row, int column)
+	{
+		return thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol);
+		
+	} // End of method isThisSpotClaimedByComputer.
+	
+	
 	private static void searchForColumnClosestToCompletionByComputer ()
 	{
 		// Starting from the left column and moving right, scan through each column, finding the column with
@@ -184,30 +206,9 @@ public class ComputerMakeAMove
 		// that column can no longer be won by the computer):
 		bestColumnLocation = -1;
 		bestColumnCount = 0;
-		SearchColumns: for (int column = 0; column < thisGame.dimension; ++column)
+		for (int column = 0; column < thisGame.dimension; ++column)
 		{
-			// For the current column, starting from the top and moving down, scan
-			// through all of the spots:
-			computerTileCount = 0;
-			for (int row = 0; row < thisGame.dimension; ++row)
-			{
-				// If we find that the current spot has been claimed by the player, then move
-				// onto the next column:
-				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
-				{
-					continue SearchColumns;
-				}
-				
-				// Otherwise, check if the current spot is already claimed by the computer:
-				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
-				{
-					// Increment the count:
-					++computerTileCount;
-				}
-				
-				// Else, it's just an empty spot, so move onto the next spot in this column.
-			}
-			
+			searchRowsInCurrentColumn(column);
 			// We have searched through all the spots in the current column.
 			// Finally, check if we found more spots claimed by the computer in this current column than
 			// the previous column we have recorded with the most spots.
@@ -217,10 +218,8 @@ public class ComputerMakeAMove
 				bestColumnLocation = column;
 				bestColumnCount = computerTileCount;
 			}
-			
 			// Otherwise, move onto the next column in hopes of something better.
 		}
-		
 		// We have now searched all of the columns on the game board.
 		// bestColumnLocation will be equal to -1 if all columns have at least 1 spot that is claimed by the player.
 		// In this case, we set bestColumnCount to -1 so columns will not be considered in selectBestPath:
@@ -232,21 +231,44 @@ public class ComputerMakeAMove
 	} // End of method searchColumns.
 	
 	
+	private static void searchRowsInCurrentColumn (int currentColumn)
+	{
+		// For the current column, starting from the top and moving down, scan
+		// through all of the spots:
+		computerTileCount = 0;
+		for (int row = 0; row < thisGame.dimension; ++row)
+		{
+			// If we find that the current spot has been claimed by the player, then move
+			// onto the next column:
+			if ( isThisSpotClaimedByPlayer(row, currentColumn) )
+			{
+				computerTileCount = -1;
+				return;
+			}
+			// Otherwise, check if the current spot is already claimed by the computer:
+			if ( isThisSpotClaimedByComputer(row, currentColumn) )
+			{
+				// Increment the count:
+				++computerTileCount;
+			}
+			// Else, it's just an empty spot, so move onto the next spot in this column.
+		}
+		
+	} // End of method searchRowsInCurrentColumn.
+
+	
 	private static void searchForDiagonalClosestToCompletionByComputer ()
 	{				
 		// Reset the best diagonal location, since it may have changed:
 		bestDiagonalLocation = -1;
-		
 		// Scan through each of the two diagonals that go through the center of the game board, finding the diagonal
 		// with the most computer tiles and NO player tiles (if there is a player’s tile in the diagonal, then that
 		// diagonal can no longer be won).
 		searchUpRightDiagonal();
 		searchDownRightDiagonal();
-		
 		// Else, the first diagonal is the better choice or equal choice, or both diagonals are unwinnable,
 		// so both == -1.
 		chosenDiagonal = bestDiagonalLocation;
-		
 		// We have now searched both of the diagonals on the game board.
 		// bestDiagonalLocation will be equal to -1 if both diagonals have at least 1 spot that is claimed by the player.
 		// In this case, we set bestDiagonalCount to -1 so both diagonals will not be considered in selectBestPath:
@@ -269,23 +291,20 @@ public class ComputerMakeAMove
 		{
 			// If we find that the current spot has been claimed by the player, then abandon searching
 			// the rest of this diagonal:
-			if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+			if ( isThisSpotClaimedByPlayer(row, column) )
 			{
 				// Don't use this diagonal, so we use -1 to indicate this:
 				computerTileCount = -1;
 				break;
 			}
-			
 			// Otherwise, check if the current spot is already claimed by the computer:
-			if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+			if ( isThisSpotClaimedByComputer(row, column) )
 			{
 				// Increment the count:
 				++computerTileCount;
 			}
-			
 			// Else, it's just an empty spot, so move onto the next spot in this diagonal.
 		}
-		
 		// At this point, we either scanned the entire second diagonal (and found no player tiles in it),
 		// or we found one or more player tiles and abandoned the rest of the search.
 		// Verify that this diagonal is still able to be won by checking that we made it to the end:
@@ -314,23 +333,20 @@ public class ComputerMakeAMove
 		{
 			// If we find that the current spot has been claimed by the player, then abandon searching
 			// the rest of this diagonal:
-			if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+			if ( isThisSpotClaimedByPlayer(row, column) )
 			{
 				// Don't use this diagonal, so we use -1 to indicate this:
 				computerTileCount = -1;
 				break;
 			}
-			
 			// Otherwise, check if the current spot is already claimed by the computer:
-			if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+			if ( isThisSpotClaimedByComputer(row, column) )
 			{
 				// Increment the count:
 				++computerTileCount;
 			}
-
 			// Else, it's just an empty spot, so move onto the next spot in this diagonal.
 		}
-		
 		// At this point, we either scanned the entire first diagonal (and found no player tiles in it),
 		// or we found one or more player tiles and abandoned the rest of the search.
 		// Verify that this diagonal is still able to be won by checking that we made it to the end:
@@ -481,10 +497,7 @@ public class ComputerMakeAMove
 		do
 		{
 			chosenColumn = randomIndex.nextInt(thisGame.dimension);
-			
-		// If that GameTile was already claimed by the player or computer, then try again:
-		} while ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
-				  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
+		} while ( isChosenSpotAlreadyTaken() );
 		
 	} // End of method chooseRandomSpotInBestRow.
 	
@@ -496,10 +509,7 @@ public class ComputerMakeAMove
 		do
 		{
 			chosenRow = randomIndex.nextInt(thisGame.dimension);
-			
-		// If that GameTile was already claimed by the player or computer, then try again:
-		} while ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
-				  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
+		} while ( isChosenSpotAlreadyTaken() );
 		
 	} // End of method chooseRandomSpotInBestColumn.
 	
@@ -520,10 +530,7 @@ public class ComputerMakeAMove
 				// they are always equal to each other as we travel the diagonal:
 				chosenRow = randomIndex.nextInt(thisGame.dimension);
 				chosenColumn = chosenRow;
-				
-			// If that GameTile was already claimed by the player or computer, then try again:
-			} while ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
-					  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
+			} while ( isChosenSpotAlreadyTaken() );
 		}
 		else // chosenDiagonal == thisGame.dimension - 1
 		{
@@ -538,10 +545,7 @@ public class ComputerMakeAMove
 				// Or, given a row, we can rewrite this relationship as column = dimension - 1 - row.
 				chosenRow = randomIndex.nextInt(thisGame.dimension);
 				chosenColumn = thisGame.dimension - 1 - chosenRow;
-				
-			// If that GameTile was already claimed by the player or computer, then try again:
-			} while ( thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.playerSymbol) ||
-					  thisGame.gameBoard [chosenRow] [chosenColumn].getText().equals(thisGame.computerSymbol) );
+			} while ( isChosenSpotAlreadyTaken() );
 		}
 		
 	} // End of method chooseRandomSpotInBestDiagonal.
@@ -570,7 +574,6 @@ public class ComputerMakeAMove
 			
 			// In each row, scan through it and check if the player is 1 turn away from completing it,
 			// thus winning the game:
-			
 			// Search through each row on the game board:
 			SearchRows: for (int row = 0; row < thisGame.dimension; ++row)
 			{
@@ -581,18 +584,16 @@ public class ComputerMakeAMove
 					// Check if we have already placed a tile in this row, thus permanently blocking the player from
 					// completing it.
 					// This prevents the computer from trying to block the player, in the same row, multiple times:
-					if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+					if ( isThisSpotClaimedByComputer(row, column) )
 					{
 						// Move onto the next row:
 						continue SearchRows;
 					}
-					
 					// Keep track of all of the player's tiles we find in this row:
-					if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+					if ( isThisSpotClaimedByPlayer(row, column) )
 					{
 						++playerTileCount;
 					}
-					
 					// Otherwise, this spot in this row is empty, so keep track of it in case it's the only one left
 					// and we must fill it:
 					else
@@ -600,7 +601,6 @@ public class ComputerMakeAMove
 						emptyColumnIndex = column;
 					}
 				}
-				
 				// Now that we have searched the whole row, check if the player is 1 turn away from completing it:
 				if ( playerTileCount == (thisGame.dimension - 1) )
 				{
@@ -620,7 +620,6 @@ public class ComputerMakeAMove
 			
 			// In each column, scan through it and check if the player is 1 turn away from completing it,
 			// thus winning the game:
-			
 			// Search through each column on the game board:
 			SearchColumns: for (int column = 0; column < thisGame.dimension; ++column)
 			{
@@ -631,18 +630,16 @@ public class ComputerMakeAMove
 					// Check if we have already placed a tile in this column, thus permanently blocking the player from
 					// completing it.
 					// This prevents the computer from trying to block the player, in the same column, multiple times:
-					if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+					if ( isThisSpotClaimedByComputer(row, column) )
 					{
 						// Move onto the next column:
 						continue SearchColumns;
 					}
-					
 					// Keep track of all of the player's tiles we find in this column:
-					if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+					if ( isThisSpotClaimedByPlayer(row, column) )
 					{
 						++playerTileCount;
 					}
-					
 					// Otherwise, this spot in this column is empty, so keep track of it in case it's the only one left
 					// and we must fill it:
 					else
@@ -650,7 +647,6 @@ public class ComputerMakeAMove
 						emptyRowIndex = row;
 					}
 				}
-				
 				// Now that we have searched the whole column, check if the player is 1 turn away from completing it:
 				if ( playerTileCount == (thisGame.dimension - 1) )
 				{
@@ -670,7 +666,6 @@ public class ComputerMakeAMove
 			
 			// In each diagonal, scan through it and check if the player is 1 turn away from completing it,
 			// thus winning the game:
-			
 			// Scan the first diagonal, which starts at the top left and moves down-right:
 			playerTileCount = 0;
 			emptyRowIndex = 0;
@@ -680,19 +675,17 @@ public class ComputerMakeAMove
 				// Check if we have already placed a tile in this diagonal, thus permanently blocking the player from
 				// completing it.
 				// This prevents the computer from trying to block the player, in the same diagonal, multiple times:
-				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+				if ( isThisSpotClaimedByComputer(row, column) )
 				{
 					// Move onto scanning the next diagonal:
 					playerTileCount = -1;
 					break;
 				}
-				
 				// Keep track of all of the player's tiles we find in this diagonal:
-				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+				if ( isThisSpotClaimedByPlayer(row, column) )
 				{
 					++playerTileCount;
 				}
-				
 				// Otherwise, this spot in this diagonal is empty, so keep track of it in case it's the only one left
 				// and we must fill it:
 				else
@@ -701,7 +694,6 @@ public class ComputerMakeAMove
 					emptyColumnIndex = column;
 				}
 			}
-			
 			// Now that we have scanned the first diagonal, check if the player is 1 turn away from completing it.
 			// We skip this if playerTileCount is set to -1, because the above diagonal was already blocked:
 			if ( playerTileCount == (thisGame.dimension - 1) )
@@ -709,7 +701,6 @@ public class ComputerMakeAMove
 				// BLOCK THEM!
 				claimSpotOnGameBoard(emptyRowIndex, emptyColumnIndex);
 			}
-			
 			// Then, scan the second diagonal, which starts at the bottom left and moves up-right:
 			playerTileCount = 0;
 			emptyRowIndex = 0;
@@ -719,18 +710,16 @@ public class ComputerMakeAMove
 				// Check if we have already placed a tile in this diagonal, thus permanently blocking the player from
 				// completing it.
 				// This prevents the computer from trying to block the player, in the same diagonal, multiple times:
-				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.computerSymbol) )
+				if ( isThisSpotClaimedByComputer(row, column) )
 				{
 					// We now know both diagonals have already been blocked by the computer, so we exit the method:
 					return;
 				}
-				
 				// Keep track of all of the player's tiles we find in this diagonal:
-				if ( thisGame.gameBoard [row] [column].getText().equals(thisGame.playerSymbol) )
+				if ( isThisSpotClaimedByPlayer(row, column) )
 				{
 					++playerTileCount;
 				}
-				
 				// Otherwise, this spot in this diagonal is empty, so keep track of it in case it's the only one left
 				// and we must fill it:
 				else
@@ -739,7 +728,6 @@ public class ComputerMakeAMove
 					emptyColumnIndex = column;
 				}
 			}
-			
 			// Now that we have scanned the second diagonal, check if the player is 1 turn away from completing it:
 			if ( playerTileCount == (thisGame.dimension - 1) )
 			{
