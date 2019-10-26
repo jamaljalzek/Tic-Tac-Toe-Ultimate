@@ -14,8 +14,3 @@ completed (by the computer, with no player markers present), and randomly choose
 3.  HARD - Basically MEDIUM mode, but with added offensive behavior: the computer will block you if you are one move away from
 completing a row, column, or diagonal. The only way to win on this mode is to use a strategy that leads to a situation where
 you have two different ways of winning during a single turn.
-
-TO DO:
-- Finish polishing the main screen GUI
-- Finish implementing the game end screen
-- Implement HARD mode
