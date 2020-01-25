@@ -1,27 +1,34 @@
+package oldPackage;
 
 
 public class Game
 {
-	protected final int dimension;
-	protected int numberOfSpotsClaimed;
-	protected final String playerSymbol, computerSymbol;
-	protected GameTile [] [] gameBoard;
-	protected boolean hasEnded;
-	protected boolean isPlayersTurn;
+	private static Game thisGame;
+	public final int dimension;
+	public int numberOfSpotsClaimed;
+	public final String playerSymbol, computerSymbol;
+	public GameTile [] [] gameBoard;
+	public boolean hasEnded;
+	public boolean isPlayersTurn;
 	protected String difficulty; // Set to either “EASY”, “MEDIUM”, “HARD”, etc.
 	
 	
 	public Game (int dimension, String playerSymbol, String computerSymbol, String difficulty)
 	{
+		Game.thisGame = this;
 		this.dimension = dimension;
 		this.numberOfSpotsClaimed = 0;
 		this.playerSymbol = playerSymbol;
 		this.computerSymbol = computerSymbol;
 		this.hasEnded = false;
-		this.difficulty = difficulty;
-		ComputerMakeAMove.thisGame = this;
-		
-	} // End of Constructor.
+		this.difficulty = difficulty;	
+	}
+	
+	
+	public static Game thisGame()
+	{
+		return Game.thisGame;
+	}
 	
 	
 	/**

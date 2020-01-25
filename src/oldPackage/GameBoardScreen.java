@@ -1,3 +1,4 @@
+package oldPackage;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -5,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+
+import programLogic.*;
 
 
 public class GameBoardScreen extends JPanel
@@ -21,7 +24,7 @@ public class GameBoardScreen extends JPanel
 		
 		// Now, let the computer make the opening move.
 		// Because no moves have been made yet, we use easyMode to randomly select a spot:
-		ComputerMakeAMove.easyMode();
+		EasyMode.easyMode();
 		
 	} // End of Constructor.
 	
@@ -47,6 +50,7 @@ public class GameBoardScreen extends JPanel
 				this.add(currentTile);
 			}
 		}
+		GameBoard.passInNewGameBoard(thisGame.gameBoard);
 		
 		this.revalidate();
 		this.repaint();
@@ -79,15 +83,15 @@ public class GameBoardScreen extends JPanel
 			if ( thisGame.difficulty.equals("EASY") )
 			{
 				System.out.println("Inside actionPerformed EASY");
-				ComputerMakeAMove.easyMode();
+				EasyMode.easyMode();
 			}
 			else if ( thisGame.difficulty.equals("MEDIUM") )
 			{
-				ComputerMakeAMove.mediumMode();
+				MediumMode.mediumMode();
 			}
 			else //  thisGame.difficulty.equals("HARD") 
 			{
-				ComputerMakeAMove.hardMode();
+				HardMode.hardMode();
 			}
 			
 		} // End of method actionPerformed.
