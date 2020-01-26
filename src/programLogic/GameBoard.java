@@ -8,6 +8,12 @@ public class GameBoard
 	private static GameTile [] [] gameBoard;
 	
 	
+	public static int getDimension()
+	{
+		return gameBoard.length;
+	}
+	
+	
 	public static void passInNewGameBoard(GameTile [] [] gameBoard)
 	{
 		GameBoard.gameBoard = gameBoard;
@@ -43,6 +49,13 @@ public class GameBoard
 		++Game.thisGame().numberOfSpotsClaimed;
 		Game.thisGame().isPlayersTurn = true;
 		Game.thisGame().checkGameStatus(gameBoardSpotClaimed);
+	}
+	
+	
+	public static boolean canThisRowColumnOrDiagonalBeCompletedThisTurn(int computerTileCount)
+	{
+		int numberOfSpotsInEveryRowColumnAndDiagonal = Game.thisGame().dimension;
+		return computerTileCount == (numberOfSpotsInEveryRowColumnAndDiagonal - 1);
 	}
 	
 } // End of class.
