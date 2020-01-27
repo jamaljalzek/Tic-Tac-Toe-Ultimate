@@ -1,4 +1,4 @@
-package programLogic.prioritizeWinningTheGameThisTurn.subComponents.attemptToCompleteADiagonal;
+package programLogic.computerOpponentLogic.hardMode.subComponents.prioritizeWinningTheGameThisTurn.subComponents.attemptToCompleteADiagonal;
 
 import programLogic.GameBoard;
 

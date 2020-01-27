@@ -1,4 +1,4 @@
-package programLogic.prioritizeWinningTheGameThisTurn.subComponents;
+package programLogic.computerOpponentLogic.hardMode.subComponents.prioritizeWinningTheGameThisTurn.subComponents;
 
 import programLogic.GameBoard;
 

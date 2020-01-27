@@ -1,23 +1,22 @@
-package programLogic;
+package programLogic.computerOpponentLogic.hardMode.subComponents;
 
 import oldPackage.Game;
+import programLogic.GameBoard;
 
 public class PreventPlayerFromWinning
 {
 	private static int playerTileCount;
 	private static int emptyColumnIndex, emptyRowIndex;
-	private static boolean hasComputerBlockedPlayerThisTurn;
 	
 	
 	public static void blockPlayerIfTheyAreAboutToWin()
 	{
-		hasComputerBlockedPlayerThisTurn = false;
 		checkRows();
-		if (!hasComputerBlockedPlayerThisTurn)
+		if (Game.isStillComputersTurn())
 		{
 			checkColumns();
 		}
-		if (!hasComputerBlockedPlayerThisTurn)
+		if (Game.isStillComputersTurn())
 		{
 			checkDiagonals();
 		}
@@ -73,7 +72,6 @@ public class PreventPlayerFromWinning
 	private static void blockPlayerByClaimingSpotBeforeTheyCan(int row, int column)
 	{
 		GameBoard.letComputerClaimSpotOnGameBoard(row, column);
-		hasComputerBlockedPlayerThisTurn = true;
 	}
 	
 	

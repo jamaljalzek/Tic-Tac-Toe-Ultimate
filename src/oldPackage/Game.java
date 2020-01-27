@@ -31,6 +31,24 @@ public class Game
 	}
 	
 	
+	public static boolean hasEnded()
+	{
+		return Game.thisGame.hasEnded;
+	}
+	
+	
+	public static boolean isPlayersTurn()
+	{
+		return Game.thisGame.isPlayersTurn;
+	}
+	
+	
+	public static boolean isStillComputersTurn()
+	{
+		return !Game.isPlayersTurn();
+	}
+	
+	
 	/**
 	 * This method checks the row, column, and potentially the diagonal(s) that run through the passed in
 	 * selectedTile for completion by either the player, or the computer (but not both in the same row, column,

@@ -1,8 +1,9 @@
-package programLogic;
+package programLogic.computerOpponentLogic;
 
 import java.util.Random;
 
 import oldPackage.Game;
+import programLogic.GameBoard;
 
 public class EasyMode
 {
@@ -17,7 +18,7 @@ public class EasyMode
 	 */
 	public static void easyMode()
 	{
-		if (Game.thisGame().hasEnded)
+		if (Game.hasEnded())
 		{
 			return;
 		}

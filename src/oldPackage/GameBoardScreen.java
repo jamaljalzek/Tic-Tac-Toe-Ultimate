@@ -8,6 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import programLogic.*;
+import programLogic.computerOpponentLogic.EasyMode;
+import programLogic.computerOpponentLogic.hardMode.HardMode;
+import programLogic.computerOpponentLogic.mediumMode.MediumMode;
 
 
 public class GameBoardScreen extends JPanel
