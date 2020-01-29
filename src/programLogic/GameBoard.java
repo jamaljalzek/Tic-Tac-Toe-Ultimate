@@ -1,6 +1,6 @@
 package programLogic;
 
-import oldPackage.GameTile;
+import gui.gameScreen.GameTile;
 
 public class GameBoard
 {

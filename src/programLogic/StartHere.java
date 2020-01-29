@@ -1,4 +1,8 @@
-package oldPackage;
+package programLogic;
+
+import gui.StartNewGameScreen;
+import gui.programWindow.MainWindow;
+
 /**
  * @author Jamal Alzek
  * 

@@ -1,4 +1,4 @@
-package oldPackage;
+package gui;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import gui.gameScreen.GameBoardScreen;
+import gui.programWindow.MainWindow;
 import programLogic.Game;
 import programLogic.GameBoard;
 

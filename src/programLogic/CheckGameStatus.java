@@ -1,7 +1,7 @@
 package programLogic;
 
-import oldPackage.GameEndWindow;
-import oldPackage.GameTile;
+import gui.gameScreen.GameTile;
+import gui.programWindow.GameEndWindow;
 
 public class CheckGameStatus
 {
