@@ -1,6 +1,5 @@
 package programLogic.computerOpponentLogic.mediumMode.subComponents;
 
-import oldPackage.Game;
 import programLogic.GameBoard;
 
 public class SearchForRowClosestToCompletionByComputer
@@ -14,7 +13,7 @@ public class SearchForRowClosestToCompletionByComputer
 	{
 		canAnyRowBeWonByTheComputer = false;
 		bestRowCount = 0;
-		for (int currentRow = 0; currentRow < Game.thisGame().dimension; ++currentRow)
+		for (int currentRow = 0; currentRow < GameBoard.getDimension(); ++currentRow)
 		{
 			searchColumnsInCurrentRow(currentRow);
 			trackRowWithMostComputerTilesInIt(currentRow);
@@ -25,7 +24,7 @@ public class SearchForRowClosestToCompletionByComputer
 	private static void searchColumnsInCurrentRow(int currentRow)
 	{
 		computerTileCount = 0;
-		for (int currentColumn = 0; currentColumn < Game.thisGame().dimension; ++currentColumn)
+		for (int currentColumn = 0; currentColumn < GameBoard.getDimension(); ++currentColumn)
 		{
 			if (hasThePlayerAlreadyBlockedThisRow(currentRow, currentColumn))
 			{

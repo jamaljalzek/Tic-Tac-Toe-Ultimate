@@ -1,6 +1,5 @@
 package programLogic;
 
-import oldPackage.Game;
 import oldPackage.GameEndWindow;
 import oldPackage.GameTile;
 
@@ -81,7 +80,7 @@ public class CheckGameStatus
 		
 		if (rowTileCount == GameBoard.getDimension())
 		{
-			Game.thisGame().hasEnded = true;
+			Game.setHasEnded(true);
 			new GameEndWindow(selectedTileText + " has won a row!");
 		}
 	}
@@ -114,7 +113,7 @@ public class CheckGameStatus
 		
 		if (columnTileCount == GameBoard.getDimension())
 		{
-			Game.thisGame().hasEnded = true;
+			Game.setHasEnded(true);
 			new GameEndWindow(selectedTileText + " has won a column!");
 		}
 	}
@@ -154,7 +153,7 @@ public class CheckGameStatus
 		
 		if (upRightDiagonalTileCount == GameBoard.getDimension())
 		{
-			Game.thisGame().hasEnded = true;
+			Game.setHasEnded(true);
 			new GameEndWindow(selectedTileText + " has won the NE diagonal!");
 		}
 	}
@@ -186,7 +185,7 @@ public class CheckGameStatus
 		
 		if (downRightDiagonalTileCount == GameBoard.getDimension())
 		{
-			Game.thisGame().hasEnded = true;
+			Game.setHasEnded(true);
 			new GameEndWindow(selectedTileText + " has won the SW diagonal!");
 		}
 	}
@@ -196,9 +195,10 @@ public class CheckGameStatus
 	{
 		// Finally, it is possible that the game has ended in a draw/stale mate. Check if all spots on the game board
 		// have been filled:
-		if ( Game.thisGame().numberOfSpotsClaimed == (GameBoard.getDimension() * GameBoard.getDimension()) )
+		int totalNumberOfSpotsOnGameBoard = GameBoard.getDimension() * GameBoard.getDimension();
+		if (Game.getNumberOfSpotsClaimed() == totalNumberOfSpotsOnGameBoard)
 		{
-			Game.thisGame().hasEnded = true;
+			Game.setHasEnded(true);
 			new GameEndWindow("DRAW!");
 		}		
 	}

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import programLogic.CheckGameStatus;
+import programLogic.Game;
 import programLogic.GameBoard;
 import programLogic.computerOpponentLogic.EasyMode;
 import programLogic.computerOpponentLogic.hardMode.HardMode;

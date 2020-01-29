@@ -2,7 +2,6 @@ package programLogic.computerOpponentLogic.mediumMode.subComponents;
 
 import java.util.Random;
 
-import oldPackage.Game;
 import programLogic.GameBoard;
 
 public class PickSpotRandomly
@@ -13,8 +12,8 @@ public class PickSpotRandomly
 		Random randomIndex = new Random();
 		do
 		{
-			chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
-			chosenColumn = randomIndex.nextInt(Game.thisGame().dimension);
+			chosenRow = randomIndex.nextInt(GameBoard.getDimension());
+			chosenColumn = randomIndex.nextInt(GameBoard.getDimension());
 		}
 		while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
 		GameBoard.letComputerClaimSpotOnGameBoard(chosenRow, chosenColumn);
@@ -27,7 +26,7 @@ public class PickSpotRandomly
 		Random randomIndex = new Random();
 		do
 		{
-			chosenColumn = randomIndex.nextInt(Game.thisGame().dimension);
+			chosenColumn = randomIndex.nextInt(GameBoard.getDimension());
 		}
 		while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
 		GameBoard.letComputerClaimSpotOnGameBoard(chosenRow, chosenColumn);
@@ -40,7 +39,7 @@ public class PickSpotRandomly
 		Random randomIndex = new Random();
 		do
 		{
-			chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
+			chosenRow = randomIndex.nextInt(GameBoard.getDimension());
 		}
 		while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
 		GameBoard.letComputerClaimSpotOnGameBoard(chosenRow, chosenColumn);
@@ -67,7 +66,7 @@ public class PickSpotRandomly
 		do
 		{
 			// The relationship between the row index and the column index is row = column.
-			chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
+			chosenRow = randomIndex.nextInt(GameBoard.getDimension());
 			chosenColumn = chosenRow;
 		}
 		while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
@@ -83,8 +82,8 @@ public class PickSpotRandomly
 		{
 			// The relationship between the row index and the column index is row + column = dimension - 1.
 			// Or, given a row, we can rewrite this relationship as column = dimension - 1 - row.
-			chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
-			chosenColumn = Game.thisGame().dimension - 1 - chosenRow;
+			chosenRow = randomIndex.nextInt(GameBoard.getDimension());
+			chosenColumn = GameBoard.getDimension() - 1 - chosenRow;
 		}
 		while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
 		GameBoard.letComputerClaimSpotOnGameBoard(chosenRow, chosenColumn);

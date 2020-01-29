@@ -1,7 +1,7 @@
 package programLogic.computerOpponentLogic;
 
 
-import oldPackage.Game;
+import programLogic.Game;
 import programLogic.computerOpponentLogic.mediumMode.subComponents.PickSpotRandomly;
 
 public class EasyMode

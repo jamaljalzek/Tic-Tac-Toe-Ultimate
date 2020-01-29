@@ -1,6 +1,5 @@
 package programLogic.computerOpponentLogic.mediumMode.subComponents;
 
-import oldPackage.Game;
 import programLogic.GameBoard;
 
 public class SearchForDiagonalClosestToCompletionByComputer
@@ -21,7 +20,7 @@ public class SearchForDiagonalClosestToCompletionByComputer
 	private static void searchDownRightDiagonal()
 	{
 		computerTileCount = 0;
-		for (int row = 0, column = 0; row < Game.thisGame().dimension && column < Game.thisGame().dimension; ++row, ++column)
+		for (int row = 0, column = 0; row < GameBoard.getDimension() && column < GameBoard.getDimension(); ++row, ++column)
 		{
 			if (hasThePlayerAlreadyBlockedThisDiagonal(row, column))
 			{
@@ -56,8 +55,8 @@ public class SearchForDiagonalClosestToCompletionByComputer
 	private static void searchUpRightDiagonal()
 	{
 		computerTileCount = 0;
-		int bottomRow = Game.thisGame().dimension - 1;
-		for (int row = bottomRow, column = 0; row >= 0 && column < Game.thisGame().dimension; --row, ++column)
+		int bottomRow = GameBoard.getDimension() - 1;
+		for (int row = bottomRow, column = 0; row >= 0 && column < GameBoard.getDimension(); --row, ++column)
 		{
 			if (hasThePlayerAlreadyBlockedThisDiagonal(row, column))
 			{

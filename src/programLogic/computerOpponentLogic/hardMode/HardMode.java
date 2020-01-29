@@ -1,6 +1,6 @@
 package programLogic.computerOpponentLogic.hardMode;
 
-import oldPackage.Game;
+import programLogic.Game;
 import programLogic.computerOpponentLogic.hardMode.subComponents.PreventPlayerFromWinning;
 import programLogic.computerOpponentLogic.hardMode.subComponents.prioritizeWinningTheGameThisTurn.PrioritizeWinningTheGameThisTurn;
 import programLogic.computerOpponentLogic.mediumMode.MediumMode;

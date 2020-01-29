@@ -1,6 +1,6 @@
 package programLogic.computerOpponentLogic.hardMode.subComponents.prioritizeWinningTheGameThisTurn;
 
-import oldPackage.Game;
+import programLogic.Game;
 import programLogic.computerOpponentLogic.hardMode.subComponents.prioritizeWinningTheGameThisTurn.subComponents.AttemptToCompleteAColumn;
 import programLogic.computerOpponentLogic.hardMode.subComponents.prioritizeWinningTheGameThisTurn.subComponents.AttemptToCompleteARow;
 import programLogic.computerOpponentLogic.hardMode.subComponents.prioritizeWinningTheGameThisTurn.subComponents.attemptToCompleteADiagonal.AttemptToCompleteADiagonal;
