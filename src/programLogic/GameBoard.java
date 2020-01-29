@@ -6,11 +6,45 @@ import oldPackage.GameTile;
 public class GameBoard
 {
 	private static GameTile [] [] gameBoard;
+	private static int dimension;
+	
+	
+	public static void setUpNewGameBoard()
+	{
+		gameBoard = new GameTile [dimension] [dimension];
+		for (int currentRow = 0; currentRow < dimension; ++currentRow)
+		{
+			for (int currentColumn = 0; currentColumn < dimension; ++currentColumn)
+			{
+				addNewGameTimeToTheGameBoard(currentRow, currentColumn);
+			}
+		}
+		Game.thisGame().gameBoard = gameBoard;
+	}
+	
+	
+	private static void addNewGameTimeToTheGameBoard(int currentRow, int currentColumn)
+	{
+		GameTile currentTile = new GameTile(currentRow, currentColumn);
+		gameBoard [currentRow] [currentColumn] = currentTile;
+	}
+	
+	
+	public static GameTile getGameTileAt(int row, int column)
+	{
+		return gameBoard [row] [column];
+	}
 	
 	
 	public static int getDimension()
 	{
-		return gameBoard.length;
+		return dimension;
+	}
+	
+	
+	public static void setDimension(int dimension)
+	{
+		 GameBoard.dimension = dimension;
 	}
 	
 	
@@ -23,7 +57,7 @@ public class GameBoard
 	public static boolean isChosenSpotAlreadyTaken(int chosenRow, int chosenColumn)
 	{
 		GameTile gameBoardSpotClaimed = gameBoard [chosenRow] [chosenColumn];
-		return gameBoardSpotClaimed.getText().isBlank();
+		return !gameBoardSpotClaimed.getText().isBlank();
 	}
 	
 	
@@ -48,7 +82,7 @@ public class GameBoard
 		gameBoardSpotClaimed.setEnabled(false);
 		++Game.thisGame().numberOfSpotsClaimed;
 		Game.thisGame().isPlayersTurn = true;
-		Game.thisGame().checkGameStatus(gameBoardSpotClaimed);
+		CheckGameStatus.checkGameStatus(gameBoardSpotClaimed);
 	}
 	
 	
@@ -56,6 +90,15 @@ public class GameBoard
 	{
 		int numberOfSpotsInEveryRowColumnAndDiagonal = Game.thisGame().dimension;
 		return computerTileCount == (numberOfSpotsInEveryRowColumnAndDiagonal - 1);
+	}
+	
+	
+	public static void letPlayerClaimSpotOnGameBoard(GameTile clickedTile)
+	{
+		clickedTile.setText(Game.thisGame().playerSymbol);
+		clickedTile.setEnabled(false);
+		++Game.thisGame().numberOfSpotsClaimed;
+		Game.thisGame().isPlayersTurn = false;
 	}
 	
 } // End of class.

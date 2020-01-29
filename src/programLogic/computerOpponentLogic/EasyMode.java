@@ -1,15 +1,11 @@
 package programLogic.computerOpponentLogic;
 
-import java.util.Random;
 
 import oldPackage.Game;
-import programLogic.GameBoard;
+import programLogic.computerOpponentLogic.mediumMode.subComponents.PickSpotRandomly;
 
 public class EasyMode
 {
-	private static int chosenRow, chosenColumn;
-	
-	
 	/**
 	 * During this difficulty, the computer uses no strategy to win. Instead, it will search
 	 * for an open spot on the game board randomly, and select the first one it finds.
@@ -22,20 +18,7 @@ public class EasyMode
 		{
 			return;
 		}
-		chooseRandomSpotOnGameBoard();
-		GameBoard.letComputerClaimSpotOnGameBoard(chosenRow, chosenColumn);
+		PickSpotRandomly.onGameBoard();
 	}
-		
-	
-	private static void chooseRandomSpotOnGameBoard()
-	{
-		Random randomIndex = new Random();
-		do
-		{
-			chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
-			chosenColumn = randomIndex.nextInt(Game.thisGame().dimension);
-		}
-		while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
-	}
-	
+
 } // End of class.

@@ -9,19 +9,10 @@ public class StartHere
 {
 	public static void main (String [] args)
 	{
-		MainWindow mainWindow;
-		StartNewGameScreen startNewGameScreen;
-		
-		
-		mainWindow = new MainWindow();
-		
-		startNewGameScreen = new StartNewGameScreen(mainWindow);
-		
+		MainWindow mainWindow = new MainWindow();
+		StartNewGameScreen startNewGameScreen = new StartNewGameScreen(mainWindow);
 		mainWindow.add(startNewGameScreen);
-		//mainWindow.add(game.gameBoardGUI);
-		
 		mainWindow.setVisible(true);
-		
-	} // End of method main.
+	}
 	
-} // End of class StartHere.
+} // End of class.

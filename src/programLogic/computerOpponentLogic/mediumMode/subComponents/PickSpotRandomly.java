@@ -7,11 +7,9 @@ import programLogic.GameBoard;
 
 public class PickSpotRandomly
 {
-	private static int chosenRow, chosenColumn;
-	
-	
 	public static void onGameBoard()
 	{
+		int chosenRow, chosenColumn;
 		Random randomIndex = new Random();
 		do
 		{
@@ -25,6 +23,7 @@ public class PickSpotRandomly
 	
 	public static void inChosenRow(int chosenRow)
 	{
+		int chosenColumn;
 		Random randomIndex = new Random();
 		do
 		{
@@ -37,6 +36,7 @@ public class PickSpotRandomly
 	
 	public static void inChosenColumn(int chosenColumn)
 	{
+		int chosenRow;
 		Random randomIndex = new Random();
 		do
 		{
@@ -47,29 +47,46 @@ public class PickSpotRandomly
 	}
 	
 	
-	public static void inChosenDiagonal(int chosenDiagonalRowLocation)
+	public static void inChosenDiagonal(int chosenDiagonalStartingRowLocation)
 	{
+		if (chosenDiagonalStartingRowLocation == 0)
+		{
+			inDownRightDiagonal();
+		}
+		else // chosenDiagonalStartingRowLocation == bottom row index
+		{
+			inUpRightDiagonal();
+		}
+	}
+	
+	
+	private static void inDownRightDiagonal()
+	{
+		int chosenRow, chosenColumn;
 		Random randomIndex = new Random();
-		if (chosenDiagonalRowLocation == 0)
+		do
 		{
-			do
-			{
-				chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
-				chosenColumn = chosenRow;
-			}
-			while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
+			// The relationship between the row index and the column index is row = column.
+			chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
+			chosenColumn = chosenRow;
 		}
-		else // chosenDiagonalRowLocation == bottom row index
+		while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
+		GameBoard.letComputerClaimSpotOnGameBoard(chosenRow, chosenColumn);
+	}
+	
+	
+	private static void inUpRightDiagonal()
+	{
+		int chosenRow, chosenColumn;
+		Random randomIndex = new Random();
+		do
 		{
-			do
-			{
-				// The relationship between the row index and the column index is row + column = dimension - 1.
-				// Or, given a row, we can rewrite this relationship as column = dimension - 1 - row.
-				chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
-				chosenColumn = Game.thisGame().dimension - 1 - chosenRow;
-			}
-			while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
+			// The relationship between the row index and the column index is row + column = dimension - 1.
+			// Or, given a row, we can rewrite this relationship as column = dimension - 1 - row.
+			chosenRow = randomIndex.nextInt(Game.thisGame().dimension);
+			chosenColumn = Game.thisGame().dimension - 1 - chosenRow;
 		}
+		while (GameBoard.isChosenSpotAlreadyTaken(chosenRow, chosenColumn));
 		GameBoard.letComputerClaimSpotOnGameBoard(chosenRow, chosenColumn);
 	}
 

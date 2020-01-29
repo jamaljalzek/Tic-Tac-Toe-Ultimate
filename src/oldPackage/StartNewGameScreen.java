@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import programLogic.GameBoard;
+
 public class StartNewGameScreen extends JPanel
 {
 	private MainWindow mainWindow;
@@ -221,8 +223,9 @@ public class StartNewGameScreen extends JPanel
 		
 		private void startAndDisplayNewGame ()
 		{
-			mainWindow.displayNewScreen(new GameBoardScreen(
-			new Game(selectedDimension, enterPlayerSymbol.getText(), enterComputerSymbol.getText(), selectedDifficulty) ) );
+			GameBoard.setDimension(selectedDimension);
+			new Game(selectedDimension, enterPlayerSymbol.getText(), enterComputerSymbol.getText(), selectedDifficulty);
+			mainWindow.displayNewScreen(new GameBoardScreen());
 			
 		} // End of method startAndDisplayNewGame.
 		
