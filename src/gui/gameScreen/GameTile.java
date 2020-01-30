@@ -10,6 +10,7 @@ import programLogic.GameBoard;
 import programLogic.computerOpponentLogic.EasyMode;
 import programLogic.computerOpponentLogic.hardMode.HardMode;
 import programLogic.computerOpponentLogic.mediumMode.MediumMode;
+import programLogic.computerOpponentLogic.veryHardMode.VeryHardMode;
 
 public class GameTile extends JButton
 {
@@ -49,9 +50,13 @@ public class GameTile extends JButton
 			{
 				MediumMode.mediumMode();
 			}
-			else // Game.difficulty().equals("HARD") 
+			else if (Game.getDifficulty().equals("HARD"))
 			{
 				HardMode.hardMode();
+			}
+			else // Game.getDifficulty().equals("VERY HARD")
+			{
+				VeryHardMode.veryHardMode();
 			}
 		}
 

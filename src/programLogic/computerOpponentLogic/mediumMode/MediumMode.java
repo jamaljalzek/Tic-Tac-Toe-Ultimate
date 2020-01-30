@@ -1,6 +1,5 @@
 package programLogic.computerOpponentLogic.mediumMode;
 
-import programLogic.Game;
 import programLogic.computerOpponentLogic.mediumMode.subComponents.SearchForColumnClosestToCompletionByComputer;
 import programLogic.computerOpponentLogic.mediumMode.subComponents.SearchForDiagonalClosestToCompletionByComputer;
 import programLogic.computerOpponentLogic.mediumMode.subComponents.SearchForRowClosestToCompletionByComputer;

@@ -26,7 +26,7 @@ public class StartNewGameScreen extends JPanel
 	private JComboBox <Integer> selectDimensionList;
 	private int selectedDimension;
 	private String selectedDifficulty;
-	private JRadioButton easyMode, mediumMode, hardMode;
+	private JRadioButton easyMode, mediumMode, hardMode, veryHardMode;
 	private JPanel settingsPanel, chooseSymbolsAndDimensionPanel, selectDifficultyPanel, buttonsPanel;
 	private Integer [] dimensionsToChoose;
 	private JButton start, quit;
@@ -117,13 +117,14 @@ public class StartNewGameScreen extends JPanel
 	private void createDifficultyRadioButtons ()
 	{
 		easyMode = new JRadioButton("EASY");
-		easyMode.addItemListener( new RadioButtonListener() );
+		easyMode.addItemListener(new RadioButtonListener());
 		mediumMode = new JRadioButton("MEDIUM");
-		mediumMode.addItemListener( new RadioButtonListener() );
+		mediumMode.addItemListener(new RadioButtonListener());
 		hardMode = new JRadioButton("HARD");
-		hardMode.addItemListener( new RadioButtonListener() );
-		
-	} // End of method createDifficultyRadioButtons.
+		hardMode.addItemListener(new RadioButtonListener());
+		veryHardMode = new JRadioButton("VERY HARD");
+		veryHardMode.addItemListener(new RadioButtonListener());
+	}
 	
 	
 	private void createSelectDifficultyPanel ()
@@ -134,8 +135,8 @@ public class StartNewGameScreen extends JPanel
 		selectDifficultyPanel.add(easyMode);
 		selectDifficultyPanel.add(mediumMode);
 		selectDifficultyPanel.add(hardMode);
-		
-	} // End of method createSelectDifficultyPanel.
+		selectDifficultyPanel.add(veryHardMode);
+	}
 	
 	
 	private void createSettingsPanel ()
@@ -265,62 +266,62 @@ public class StartNewGameScreen extends JPanel
 	private class RadioButtonListener implements ItemListener
 	{
 		private ItemEvent event;
+		private JRadioButton selectedRadioButton;
 		
 		
 		@Override
-		public void itemStateChanged (ItemEvent event)
+		public void itemStateChanged(ItemEvent event)
 		{
 			this.event = event;
-			
-			
-			if ( isThisRadioButtonSelected() )
+			if (isThisRadioButtonSelected())
 			{
 				determineGameDifficultySelected();
 				unselectOtherRadioButtons();
 			}
-			// Else, do nothing.
-			
-		} // End of method itemStateChanged.
+		}
 		
 		
-		private boolean isThisRadioButtonSelected ()
+		private boolean isThisRadioButtonSelected()
 		{
 			return event.getStateChange() == ItemEvent.SELECTED;
-			
-		} // End of method isThisRadioButtonSelected.
+		}
 		
 		
-		private void determineGameDifficultySelected ()
+		private void determineGameDifficultySelected()
 		{
-			JRadioButton selectedRadioButton;
-			
-			
 			selectedRadioButton = (JRadioButton) event.getItem();
 			selectedDifficulty = selectedRadioButton.getText();
-			
-		} // End of method determineGameDifficultySelected.
+		}
 		
 		
-		private void unselectOtherRadioButtons ()
+		private void unselectOtherRadioButtons()
 		{
-			if ( selectedDifficulty.equals("EASY") )
+			if (selectedRadioButton == easyMode)
 			{
 				mediumMode.setSelected(false);
 				hardMode.setSelected(false);
+				veryHardMode.setSelected(false);
 			}
-			else if ( selectedDifficulty.equals("MEDIUM") )
+			else if (selectedRadioButton == mediumMode)
 			{
 				easyMode.setSelected(false);
 				hardMode.setSelected(false);
+				veryHardMode.setSelected(false);
 			}
-			else // selectedDifficulty.equals("HARD")
+			else if (selectedRadioButton == hardMode)
 			{
 				easyMode.setSelected(false);
 				mediumMode.setSelected(false);
+				veryHardMode.setSelected(false);
 			}
-			
-		} // End of method unselectOtherRadioButtons.
+			else // selectedRadioButton == veryHardMode
+			{
+				easyMode.setSelected(false);
+				mediumMode.setSelected(false);
+				hardMode.setSelected(false);
+			}
+		}
 		
-	} // End of class RadioButtonListener.
+	} // End of nested class.
 	
-} // End of class StartNewGameScreen.
+} // End of class.
