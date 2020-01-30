@@ -14,10 +14,6 @@ public class EasyMode
 	 */
 	public static void easyMode()
 	{
-		if (Game.hasEnded())
-		{
-			return;
-		}
 		PickSpotRandomly.onGameBoard();
 	}
 

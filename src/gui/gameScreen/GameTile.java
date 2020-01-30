@@ -37,6 +37,10 @@ public class GameTile extends JButton
 		
 		private void letTheComputerMakeACounterMove()
 		{
+			if (Game.hasEnded())
+			{
+				return;
+			}
 			if (Game.getDifficulty().equals("EASY"))
 			{
 				EasyMode.easyMode();

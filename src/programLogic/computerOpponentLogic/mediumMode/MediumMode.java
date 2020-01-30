@@ -21,10 +21,6 @@ public class MediumMode
 	 */
 	public static void mediumMode()
 	{
-		if (Game.hasEnded())
-		{
-			return;
-		}
 		SearchForRowClosestToCompletionByComputer.searchForRowClosestToCompletionByComputer();
 		SearchForColumnClosestToCompletionByComputer.searchForColumnClosestToCompletionByComputer();
 		SearchForDiagonalClosestToCompletionByComputer.searchForDiagonalClosestToCompletionByComputer();		

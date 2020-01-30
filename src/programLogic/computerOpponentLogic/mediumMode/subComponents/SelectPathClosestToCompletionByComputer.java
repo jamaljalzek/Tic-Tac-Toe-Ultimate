@@ -7,28 +7,44 @@ public class SelectPathClosestToCompletionByComputer
 	
 	public static void selectPathClosestToCompletionByComputer()
 	{
-		determineIfAllOptionsAreEqual();
-		determineIfWeWillSelectARow();
-		determineIfWeWillSelectAColumn();
-		determineIfWeWillSelectADiagonal();
-	}
-	
-	
-	private static void determineIfAllOptionsAreEqual()
-	{
-		if (canNoRowColumnOrDiagonalCanBeWonByTheComputer() || doesTheBestRowColumnAndDiagonalHaveTheSameAmountOfCompletion())
+		if (areAllOptionsAreEqual())
 		{
 			PickSpotRandomly.onGameBoard();
+			return;
+		}
+		if (isItARowClosestToCompletionByComputer())
+		{
+			int chosenRow = SearchForRowClosestToCompletionByComputer.bestRowLocation();
+			PickSpotRandomly.inChosenRow(chosenRow);
+			return;
+		}
+		if (isItAColumnClosestToCompletionByComputer())
+		{
+			int chosenColumn = SearchForColumnClosestToCompletionByComputer.bestColumnLocation();
+			PickSpotRandomly.inChosenColumn(chosenColumn);
+			return;
+		}
+		if (isItADiagonalClosestToCompletionByComputer())
+		{
+			int chosenDiagonalRowLocation = SearchForDiagonalClosestToCompletionByComputer.bestDiagonalLocation();
+			PickSpotRandomly.inChosenDiagonal(chosenDiagonalRowLocation);
+			return;
 		}
 	}
 	
 	
-	private static boolean canNoRowColumnOrDiagonalCanBeWonByTheComputer()
+	private static boolean areAllOptionsAreEqual()
+	{
+		return (canNoRowColumnAndDiagonalCanBeWonByTheComputer() || doesTheBestRowColumnAndDiagonalHaveTheSameAmountOfCompletion());
+	}
+	
+	
+	private static boolean canNoRowColumnAndDiagonalCanBeWonByTheComputer()
 	{
 		boolean canAnyRowBeWonByTheComputer = SearchForRowClosestToCompletionByComputer.canAnyRowBeWonByTheComputer();
 		boolean canAnyColumnBeWonByTheComputer = SearchForColumnClosestToCompletionByComputer.canAnyColumnBeWonByTheComputer();
 		boolean canEitherDiagonalBeWonByTheComputer = SearchForDiagonalClosestToCompletionByComputer.canEitherDiagonalBeWonByTheComputer();
-		return (!canAnyRowBeWonByTheComputer || !canAnyColumnBeWonByTheComputer || !canEitherDiagonalBeWonByTheComputer);
+		return (!canAnyRowBeWonByTheComputer && !canAnyColumnBeWonByTheComputer && !canEitherDiagonalBeWonByTheComputer);
 	}
 	
 	
@@ -41,42 +57,27 @@ public class SelectPathClosestToCompletionByComputer
 	}
 	
 	
-
-	
-	
-	private static void determineIfWeWillSelectARow()
+	private static boolean isItARowClosestToCompletionByComputer()
 	{
 		// R > C >= D or R > D >= C
-		if (bestRowCount >= bestColumnCount && bestColumnCount >= bestDiagonalCount ||
-			bestRowCount >= bestDiagonalCount && bestDiagonalCount >= bestColumnCount)
-		{
-			int chosenRow = SearchForRowClosestToCompletionByComputer.bestRowLocation();
-			PickSpotRandomly.inChosenRow(chosenRow);
-		}
+		return (bestRowCount >= bestColumnCount && bestColumnCount >= bestDiagonalCount ||
+				bestRowCount >= bestDiagonalCount && bestDiagonalCount >= bestColumnCount);
 	}
 	
 	
-	private static void determineIfWeWillSelectAColumn()
+	private static boolean isItAColumnClosestToCompletionByComputer()
 	{
 		// C > R >= D or C > D >= R
-		if (bestColumnCount >= bestRowCount && bestRowCount >= bestDiagonalCount ||
-			bestColumnCount >= bestDiagonalCount && bestDiagonalCount >= bestRowCount)
-		{
-			int chosenColumn = SearchForColumnClosestToCompletionByComputer.bestColumnLocation();
-			PickSpotRandomly.inChosenColumn(chosenColumn);
-		}
+		return (bestColumnCount >= bestRowCount && bestRowCount >= bestDiagonalCount ||
+				bestColumnCount >= bestDiagonalCount && bestDiagonalCount >= bestRowCount);
 	}
 	
 	
-	private static void determineIfWeWillSelectADiagonal()
+	private static boolean isItADiagonalClosestToCompletionByComputer()
 	{
 		// D > R >= C or D > C >= R
-		if (bestDiagonalCount >= bestRowCount && bestRowCount >= bestColumnCount ||
-			bestDiagonalCount >= bestColumnCount && bestColumnCount >= bestRowCount)
-		{
-			int chosenDiagonalRowLocation = SearchForDiagonalClosestToCompletionByComputer.bestDiagonalLocation();
-			PickSpotRandomly.inChosenDiagonal(chosenDiagonalRowLocation);
-		}
+		return (bestDiagonalCount >= bestRowCount && bestRowCount >= bestColumnCount ||
+				bestDiagonalCount >= bestColumnCount && bestColumnCount >= bestRowCount);
 	}
 	
 } // End of class.

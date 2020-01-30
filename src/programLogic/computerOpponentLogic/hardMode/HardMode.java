@@ -17,10 +17,7 @@ public class HardMode
 	 */
 	public static void hardMode()
 	{
-		if (!Game.hasEnded())
-		{
-			PrioritizeWinningTheGameThisTurn.attemptToWinTheGameThisTurn();
-		}
+		PrioritizeWinningTheGameThisTurn.attemptToWinTheGameThisTurn();
 		if (Game.isStillComputersTurn())
 		{
 			PreventPlayerFromWinning.blockPlayerIfTheyAreAboutToWin();

@@ -16,7 +16,6 @@ public class SearchForColumnClosestToCompletionByComputer
 		for (int currentColumn = 0; currentColumn < GameBoard.getDimension(); ++currentColumn)
 		{
 			searchRowsInCurrentColumn(currentColumn);
-			trackColumnWithMostComputerTilesInIt(currentColumn);
 		}
 	}
 	
@@ -37,6 +36,7 @@ public class SearchForColumnClosestToCompletionByComputer
 			}
 		}
 		canAnyColumnBeWonByTheComputer = true;
+		trackColumnWithMostComputerTilesInIt(currentColumn);
 	}
 	
 	
