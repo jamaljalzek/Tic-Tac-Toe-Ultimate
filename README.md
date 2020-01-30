@@ -14,3 +14,4 @@ completed (by the computer, with no player markers present), and randomly choose
 3.  HARD - Basically MEDIUM mode, but with added offensive behavior: the computer will block you if you are one move away from
 completing a row, column, or diagonal. The only way to win on this mode is to use a strategy that leads to a situation where
 you have two different ways of winning during a single turn.
+4.  VERY HARD - more aggressive than HARD mode. The computer will not wait for you to be a spot away from winning the game. Instead, it you are just two turns away from completing a row, column, or diagonal it will block you. If you manage to place yourself in a spot where you are one turn away from winning the game, then it just defaults to HARD mode and will still block you. Honestly, I'm not quite sure how one would beat this mode...
