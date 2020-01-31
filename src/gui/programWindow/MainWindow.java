@@ -3,22 +3,27 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import programLogic.GameBoard;
+
 public class MainWindow extends JFrame
 {
+	private static MainWindow mainWindow;
+	
+	
 	/**
 	 * This is the main window (JFrame) that displays the various screens (JPanels), depending on where the user
 	 * navigates via clicking the specific buttons on each screen.
 	 */
 	public MainWindow ()
 	{
+		mainWindow = this;
 		this.setTitle("Tic Tac Toe Ultimate");
 		this.setSize(400, 400);
 		this.setResizable(false);
 		this.setLayout( new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS) );
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-	} // End of Constructor.
+	}
 	
 	
 	/**Removes the current screen (JPanel) that is displayed on the MainWindow.
@@ -27,17 +32,23 @@ public class MainWindow extends JFrame
 	 * 
 	 * @param screen
 	 */
-	public void displayNewScreen (JPanel screen)
+	public static void displayNewScreen(JPanel screen)
 	{
 		// Clear everything off of this current window:
-		this.getContentPane().removeAll();
+		mainWindow.getContentPane().removeAll();
 		
-		this.add(screen);
+		mainWindow.add(screen);
 		
 		// Update the appearance of this window:
-		this.getContentPane().validate();
-		this.getContentPane().repaint();				
-		
-	} // End of method displayNewScreen.
+		mainWindow.getContentPane().validate();
+		mainWindow.getContentPane().repaint();				
+	}
 	
-} // End of class MainWindow.
+	
+	public static void resizeAndReCenterMainWindow()
+	{
+		mainWindow.setSize(GameBoard.getDimension() * 100, GameBoard.getDimension() * 100);
+		mainWindow.setLocationRelativeTo(null); // Re-center the mainWindow.
+	}
+	
+} // End of class.

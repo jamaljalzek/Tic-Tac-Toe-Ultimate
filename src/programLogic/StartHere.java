@@ -1,6 +1,6 @@
 package programLogic;
 
-import gui.StartNewGameScreen;
+import gui.menuScreen.StartNewGameScreen;
 import gui.programWindow.MainWindow;
 
 /**
@@ -14,7 +14,7 @@ public class StartHere
 	public static void main (String [] args)
 	{
 		MainWindow mainWindow = new MainWindow();
-		StartNewGameScreen startNewGameScreen = new StartNewGameScreen(mainWindow);
+		StartNewGameScreen startNewGameScreen = new StartNewGameScreen();
 		mainWindow.add(startNewGameScreen);
 		mainWindow.setVisible(true);
 	}
