@@ -1,16 +1,18 @@
-package programLogic.computerOpponentLogic.veryHardMode;
+package programLogic.computerOpponentLogic.hardModeAndVeryHardMode.subComponents;
 
 import programLogic.Game;
 import programLogic.GameBoard;
 
-public class BlockPlayerTwoTurnsAheadOfWinningTheGame
+public class PreventPlayerFromWinning
 {
+	private static int xTurnsAwayFromWinning;
 	private static int playerTileCount;
 	private static int emptyColumnIndex, emptyRowIndex;
 	
 	
-	public static void blockPlayerIfTheyAreCloseToWinning()
+	public static void blockPlayerIfTheyXTurnsAwayFromWinning(int xTurnsAwayFromWinning)
 	{
+		PreventPlayerFromWinning.xTurnsAwayFromWinning = xTurnsAwayFromWinning;
 		checkRows();
 		if (Game.isStillComputersTurn())
 		{
@@ -28,7 +30,7 @@ public class BlockPlayerTwoTurnsAheadOfWinningTheGame
 		for (int currentRow = 0; currentRow < GameBoard.getDimension(); ++currentRow)
 		{
 			searchColumnsInCurrentRow(currentRow);
-			if (isPlayerTwoSpotsAwayFromCompletion())
+			if (isPlayerXSpotsAwayFromCompletion())
 			{
 				blockPlayerByClaimingSpotBeforeTheyCan(currentRow, emptyColumnIndex);
 				return;
@@ -62,10 +64,10 @@ public class BlockPlayerTwoTurnsAheadOfWinningTheGame
 	}
 	
 	
-	private static boolean isPlayerTwoSpotsAwayFromCompletion()
+	private static boolean isPlayerXSpotsAwayFromCompletion()
 	{
 		int numberOfSpotsInEveryRowColumnAndDiagonal = GameBoard.getDimension();
-		return playerTileCount == (numberOfSpotsInEveryRowColumnAndDiagonal - 2);
+		return playerTileCount == (numberOfSpotsInEveryRowColumnAndDiagonal - xTurnsAwayFromWinning);
 	}
 	
 	
@@ -80,7 +82,7 @@ public class BlockPlayerTwoTurnsAheadOfWinningTheGame
 		for (int currentColumn = 0; currentColumn < GameBoard.getDimension(); ++currentColumn)
 		{
 			searchRowsInCurrentColumn(currentColumn);
-			if (isPlayerTwoSpotsAwayFromCompletion())
+			if (isPlayerXSpotsAwayFromCompletion())
 			{
 				blockPlayerByClaimingSpotBeforeTheyCan(emptyRowIndex, currentColumn);
 				return;
@@ -111,13 +113,13 @@ public class BlockPlayerTwoTurnsAheadOfWinningTheGame
 	private static void checkDiagonals()
 	{
 		checkDownRightDiagonal();
-		if (isPlayerTwoSpotsAwayFromCompletion())
+		if (isPlayerXSpotsAwayFromCompletion())
 		{
 			blockPlayerByClaimingSpotBeforeTheyCan(emptyRowIndex, emptyColumnIndex);
 			return;
 		}
 		checkUpRightDiagonal();
-		if (isPlayerTwoSpotsAwayFromCompletion())
+		if (isPlayerXSpotsAwayFromCompletion())
 		{
 			blockPlayerByClaimingSpotBeforeTheyCan(emptyRowIndex, emptyColumnIndex);
 		}
@@ -164,3 +166,4 @@ public class BlockPlayerTwoTurnsAheadOfWinningTheGame
 	}
 	
 } // End of class.
+

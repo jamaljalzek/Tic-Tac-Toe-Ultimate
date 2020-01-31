@@ -15,8 +15,6 @@ public class MediumMode
 	 * 2. Find the column that is closest to being completed.
 	 * 3. Find the diagonal (out of the 2 that go through the center) that is closest to being completed.
 	 * 4. Finally, select the most favorable row, column, or diagonal, and randomly choose an available spot inside.
-	 *  
-	 * @param Game.thisGame()
 	 */
 	public static void mediumMode()
 	{

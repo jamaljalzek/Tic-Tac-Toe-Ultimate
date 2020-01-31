@@ -9,9 +9,9 @@ import programLogic.CheckGameStatus;
 import programLogic.Game;
 import programLogic.GameBoard;
 import programLogic.computerOpponentLogic.EasyMode;
-import programLogic.computerOpponentLogic.hardMode.HardMode;
+import programLogic.computerOpponentLogic.hardModeAndVeryHardMode.HardMode;
+import programLogic.computerOpponentLogic.hardModeAndVeryHardMode.VeryHardMode;
 import programLogic.computerOpponentLogic.mediumMode.MediumMode;
-import programLogic.computerOpponentLogic.veryHardMode.VeryHardMode;
 
 public class GameTile extends JButton
 {

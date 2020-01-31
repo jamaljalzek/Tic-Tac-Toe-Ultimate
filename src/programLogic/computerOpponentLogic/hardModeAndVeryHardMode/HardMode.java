@@ -1,8 +1,8 @@
-package programLogic.computerOpponentLogic.hardMode;
+package programLogic.computerOpponentLogic.hardModeAndVeryHardMode;
 
 import programLogic.Game;
-import programLogic.computerOpponentLogic.hardMode.subComponents.PreventPlayerFromWinning;
-import programLogic.computerOpponentLogic.hardMode.subComponents.prioritizeWinningTheGameThisTurn.PrioritizeWinningTheGameThisTurn;
+import programLogic.computerOpponentLogic.hardModeAndVeryHardMode.subComponents.PreventPlayerFromWinning;
+import programLogic.computerOpponentLogic.hardModeAndVeryHardMode.subComponents.prioritizeWinningTheGameThisTurn.PrioritizeWinningTheGameThisTurn;
 import programLogic.computerOpponentLogic.mediumMode.MediumMode;
 
 public class HardMode
@@ -16,10 +16,22 @@ public class HardMode
 	public static void hardMode()
 	{
 		PrioritizeWinningTheGameThisTurn.attemptToWinTheGameThisTurn();
+		orAttemptToBlockThePlayerIfTheyAreOneTurnAwayFromWinning();
+		orTheComputerWillAttemptToGetCloserToWinningTheGame();
+	}
+	
+	
+	private static void orAttemptToBlockThePlayerIfTheyAreOneTurnAwayFromWinning()
+	{
 		if (Game.isStillComputersTurn())
 		{
-			PreventPlayerFromWinning.blockPlayerIfTheyAreAboutToWin();
+			PreventPlayerFromWinning.blockPlayerIfTheyXTurnsAwayFromWinning(1);
 		}
+	}
+	
+	
+	private static void orTheComputerWillAttemptToGetCloserToWinningTheGame()
+	{
 		if (Game.isStillComputersTurn())
 		{
 			MediumMode.mediumMode();
