@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import gui.gameScreen.GameBoardScreen;
+import gui.menuScreen.selectGameSettingsPanel.subComponents.SelectSymbolsAndDimensionPanel;
 import gui.programWindow.MainWindow;
 
 public class ButtonsPanel extends JPanel

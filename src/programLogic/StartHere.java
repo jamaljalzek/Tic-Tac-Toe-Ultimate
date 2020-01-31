@@ -16,7 +16,6 @@ public class StartHere
 		MainWindow mainWindow = new MainWindow();
 		StartNewGameScreen startNewGameScreen = new StartNewGameScreen();
 		mainWindow.add(startNewGameScreen);
-		mainWindow.setVisible(true);
 	}
 	
 } // End of class.

@@ -1,4 +1,4 @@
-package gui.menuScreen;
+package gui.menuScreen.selectGameSettingsPanel.subComponents;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

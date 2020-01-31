@@ -1,8 +1,11 @@
-package gui.menuScreen;
+package gui.menuScreen.selectGameSettingsPanel;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+
+import gui.menuScreen.selectGameSettingsPanel.subComponents.SelectComputerOpponentDifficultyPanel;
+import gui.menuScreen.selectGameSettingsPanel.subComponents.SelectSymbolsAndDimensionPanel;
 
 public class SelectGameSettingsPanel extends JPanel
 {

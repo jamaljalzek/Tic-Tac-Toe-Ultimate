@@ -1,4 +1,5 @@
 package gui.gameScreen;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,12 +18,21 @@ public class GameTile extends JButton
 	public final int row, column;
 	
 	
-	public GameTile (int row, int column)
+	public GameTile(int row, int column)
 	{
 		this.row = row;
 		this.column = column;
 		this.addActionListener(new ButtonListener());
+		setGameTileTextFont();
 	}
+	
+	
+	private void setGameTileTextFont()
+	{
+		Font textFont = new Font(Font.DIALOG, Font.BOLD, 48);
+		this.setFont(textFont);
+	}
+	
 	
 	private class ButtonListener implements ActionListener
 	{
