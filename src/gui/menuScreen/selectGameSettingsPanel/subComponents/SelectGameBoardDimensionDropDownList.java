@@ -34,7 +34,6 @@ public class SelectGameBoardDimensionDropDownList extends JComboBox <Integer>
 		public void actionPerformed(ActionEvent event)
 		{
 			selectedDimension = (Integer) SelectGameBoardDimensionDropDownList.this.getSelectedItem();
-			System.out.println(selectedDimension);
 			GameBoard.setDimension(selectedDimension);
 		}
 		

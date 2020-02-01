@@ -15,7 +15,7 @@ import programLogic.computerOpponentLogic.mediumMode.MediumMode;
 
 public class GameTile extends JButton
 {
-	public final int row, column;
+	private final int row, column;
 	
 	
 	public GameTile(int row, int column)
@@ -31,6 +31,18 @@ public class GameTile extends JButton
 	{
 		Font textFont = new Font(Font.DIALOG, Font.BOLD, 48);
 		this.setFont(textFont);
+	}
+	
+	
+	public int getRowLocation()
+	{
+		return this.row;
+	}
+	
+	
+	public int getColumnLocation()
+	{
+		return this.column;
 	}
 	
 	
