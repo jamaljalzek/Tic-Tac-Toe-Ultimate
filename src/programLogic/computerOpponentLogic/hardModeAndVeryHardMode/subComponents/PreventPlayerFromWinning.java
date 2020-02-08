@@ -2,12 +2,12 @@ package programLogic.computerOpponentLogic.hardModeAndVeryHardMode.subComponents
 
 import programLogic.Game;
 import programLogic.GameBoard;
+import programLogic.computerOpponentLogic.mediumMode.subComponents.PickSpotRandomly;
 
 public class PreventPlayerFromWinning
 {
 	private static int xTurnsAwayFromWinning;
 	private static int playerTileCount;
-	private static int emptyColumnIndex, emptyRowIndex;
 	
 	
 	public static void blockPlayerIfTheyXTurnsAwayFromWinning(int xTurnsAwayFromWinning)
@@ -32,7 +32,7 @@ public class PreventPlayerFromWinning
 			searchColumnsInCurrentRow(currentRow);
 			if (isPlayerXSpotsAwayFromCompletion())
 			{
-				blockPlayerByClaimingSpotBeforeTheyCan(currentRow, emptyColumnIndex);
+				PickSpotRandomly.inChosenRow(currentRow);
 				return;
 			}
 		}
@@ -53,7 +53,6 @@ public class PreventPlayerFromWinning
 			{
 				++playerTileCount;
 			}
-			emptyColumnIndex = currentColumn;
 		}
 	}
 	
@@ -71,12 +70,6 @@ public class PreventPlayerFromWinning
 	}
 	
 	
-	private static void blockPlayerByClaimingSpotBeforeTheyCan(int row, int column)
-	{
-		GameBoard.letComputerClaimSpotOnGameBoard(row, column);
-	}
-	
-	
 	private static void checkColumns()
 	{
 		for (int currentColumn = 0; currentColumn < GameBoard.getDimension(); ++currentColumn)
@@ -84,7 +77,7 @@ public class PreventPlayerFromWinning
 			searchRowsInCurrentColumn(currentColumn);
 			if (isPlayerXSpotsAwayFromCompletion())
 			{
-				blockPlayerByClaimingSpotBeforeTheyCan(emptyRowIndex, currentColumn);
+				PickSpotRandomly.inChosenColumn(currentColumn);
 				return;
 			}
 		}
@@ -105,7 +98,6 @@ public class PreventPlayerFromWinning
 			{
 				++playerTileCount;
 			}
-			emptyRowIndex = currentRow;
 		}
 	}
 	
@@ -115,13 +107,14 @@ public class PreventPlayerFromWinning
 		checkDownRightDiagonal();
 		if (isPlayerXSpotsAwayFromCompletion())
 		{
-			blockPlayerByClaimingSpotBeforeTheyCan(emptyRowIndex, emptyColumnIndex);
+			PickSpotRandomly.inChosenDiagonal(0);
 			return;
 		}
 		checkUpRightDiagonal();
 		if (isPlayerXSpotsAwayFromCompletion())
 		{
-			blockPlayerByClaimingSpotBeforeTheyCan(emptyRowIndex, emptyColumnIndex);
+			int bottomRowIndex = GameBoard.getDimension() - 1;
+			PickSpotRandomly.inChosenDiagonal(bottomRowIndex);
 		}
 	}
 	
@@ -140,8 +133,6 @@ public class PreventPlayerFromWinning
 			{
 				++playerTileCount;
 			}
-			emptyRowIndex = row;
-			emptyColumnIndex = column;
 		}
 	}
 	
@@ -160,8 +151,6 @@ public class PreventPlayerFromWinning
 			{
 				++playerTileCount;
 			}
-			emptyRowIndex = row;
-			emptyColumnIndex = column;
 		}
 	}
 	
